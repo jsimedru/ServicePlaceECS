@@ -13,42 +13,74 @@ namespace SPECS_Web_Server.Data
         public readonly AppDb Db;
         public UserQuery(AppDb db) => Db = db;
 
-        public async Task<User> FindWithAlexaIDAsync(string id)
+        public List<User> GetAllUsers()
         {
-            var cmd = Db.Connection.CreateCommand() as MySqlCommand;
-            cmd.CommandText = @"SELECT 'id_specs', 'id_alexa', 'username', 'password', 'color', 'id_devices', 'firstname', 'lastname' FROM 'user_data' WHERE 'id_alexa' = @id_alexa;";
-            cmd.Parameters.Add(new MySqlParameter
+            List<User> list = new List<User>();
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM user_data", Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                ParameterName = "@id_alexa",
-                DbType = DbType.String,
-                Value = id
-            });
-            var result = await ReadAllAsync(await cmd.ExecuteReaderAsync());
-            return result.Count > 0 ? result[0] : null;
+                while (reader.Read())
+                {
+                    list.Add(new User()
+                    {
+                        ID = reader.GetInt32("id"),
+                        AlexaID = reader.GetString("id_alexa"),
+                        Color = reader.GetString("color"),
+                        DeviceIDs = reader.GetString("id_devices"),
+                        FirstName = reader.GetString("firstname"),
+                        LastName = reader.GetString("lastname"),
+                        Password = reader.GetString("password"),
+                        Email = reader.GetString("email")
+                    });
+                }
+
+            }
+            return list;
         }
 
-        public async Task<List<User>> ReadAllAsync(DbDataReader reader)
+        public User FindAlexaUser(string alexaID)
         {
-            var users = new List<User>();
-            using (reader)
+            User user;
+            string cmdString = "SELECT * FROM user_data WHERE id_alexa='" + alexaID + "';";
+            MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                while(await reader.ReadAsync())
+                while (reader.Read())
                 {
-                    var user = new User(Db)
+                    user = new User()
                     {
-                        UserID = await reader.GetFieldValueAsync<int>(0),
-                        AlexaID = await reader.GetFieldValueAsync<string>(1),
-                        Username = await reader.GetFieldValueAsync<string>(3),
-                        Password = await reader.GetFieldValueAsync<string>(4),
-                        Color = await reader.GetFieldValueAsync<string>(5),
-                        DeviceIDs = await reader.GetFieldValueAsync<string>(6),
-                        FirstName = await reader.GetFieldValueAsync<string>(7),
-                        LastName = await reader.GetFieldValueAsync<string>(8)
+                        ID = reader.GetInt32("id"),
+                        AlexaID = reader.GetString("id_alexa"),
+                        Color = reader.GetString("color"),
+                        DeviceIDs = reader.GetString("id_devices"),
+                        FirstName = reader.GetString("firstname"),
+                        LastName = reader.GetString("lastname"),
+                        Username = reader.GetString("username"),
+                        Email = reader.GetString("email")
                     };
-                    users.Add(user);
+                    return user;
                 }
             }
-            return users;
+            return null;
+        }
+
+        public bool UpdateUserColorByAlexaID(User user, string color)
+        {
+            if (user == null || color == null)
+            {
+                return false;
+            }
+            try
+            {
+                string cmdString = "UPDATE user_data SET color='" + color + "' WHERE 'id'='" + user.ID + "';";
+                MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+                cmd.ExecuteNonQuery();
+                return true;
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
         }
     }
 }

@@ -23,10 +23,9 @@ namespace SPECS_Web_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Also adding API wrapper to use older .Net libraries
-            services.AddMvc().AddWebApiConventions();
+            services.AddMvc();
 
-            services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConfigurationStrings:DefaultConnection"]));
+            services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,13 +47,9 @@ namespace SPECS_Web_Server
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=AlexaRequest}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseMvc(routes =>
-            {
-
-            })
         }
     }
 }
