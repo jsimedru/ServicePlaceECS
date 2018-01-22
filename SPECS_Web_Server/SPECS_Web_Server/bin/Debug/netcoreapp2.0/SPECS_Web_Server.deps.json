@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "9491fb52f6085f503a2eb3987ac9d94ac188af43"
+    "signature": "17ef83717025641e1fc649d89fe87a52fdf41c40"
   },
   "compilationOptions": {
     "defines": [
@@ -23,12 +23,11 @@
     ".NETCoreApp,Version=v2.0": {
       "SPECS_Web_Server/1.0.0": {
         "dependencies": {
-          "AlexaSkillsKit.NET": "1.5.2",
+          "Alexa.NET": "1.4.2",
+          "Alexa.NET.Security.Middleware": "1.0.0",
           "Microsoft.AspNetCore.All": "2.0.5",
-          "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "2.0.2",
           "Microsoft.NETCore.App": "2.0.0",
-          "MySql.Data": "6.10.5",
-          "MySql.Web": "6.10.5"
+          "MySql.Data": "6.10.5"
         },
         "runtime": {
           "SPECS_Web_Server.dll": {}
@@ -37,25 +36,39 @@
           "SPECS_Web_Server.dll": {}
         }
       },
-      "AlexaSkillsKit.NET/1.5.2": {
+      "Alexa.NET/1.4.2": {
         "dependencies": {
-          "BouncyCastle": "1.8.1",
-          "Microsoft.AspNet.WebApi.Client": "5.2.3",
+          "NETStandard.Library": "2.0.0",
           "Newtonsoft.Json": "10.0.1"
         },
         "runtime": {
-          "lib/net45/AlexaSkillsKit.dll": {}
+          "lib/netstandard1.6/Alexa.NET.dll": {}
         },
         "compile": {
-          "lib/net45/AlexaSkillsKit.dll": {}
+          "lib/netstandard1.6/Alexa.NET.dll": {}
         }
       },
-      "BouncyCastle/1.8.1": {
+      "Alexa.NET.Security/1.0.0": {
+        "dependencies": {
+          "NETStandard.Library": "2.0.0"
+        },
         "runtime": {
-          "lib/BouncyCastle.Crypto.dll": {}
+          "lib/netstandard1.3/Alexa.NET.Security.dll": {}
         },
         "compile": {
-          "lib/BouncyCastle.Crypto.dll": {}
+          "lib/netstandard1.3/Alexa.NET.Security.dll": {}
+        }
+      },
+      "Alexa.NET.Security.Middleware/1.0.0": {
+        "dependencies": {
+          "Alexa.NET.Security": "1.0.0",
+          "Microsoft.AspNetCore.Http": "2.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Alexa.NET.Security.Middleware.dll": {}
+        },
+        "compile": {
+          "lib/netstandard2.0/Alexa.NET.Security.Middleware.dll": {}
         }
       },
       "Libuv/1.10.0": {
@@ -143,14 +156,6 @@
         },
         "compile": {
           "lib/netstandard1.6/Microsoft.AI.DependencyCollector.dll": {}
-        }
-      },
-      "Microsoft.AspNet.WebApi.Client/5.2.3": {
-        "runtime": {
-          "lib/net45/System.Net.Http.Formatting.dll": {}
-        },
-        "compile": {
-          "lib/net45/System.Net.Http.Formatting.dll": {}
         }
       },
       "Microsoft.AspNetCore/2.0.1": {
@@ -1077,20 +1082,6 @@
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.ViewFeatures.dll": {}
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.WebApiCompatShim/2.0.2": {
-        "dependencies": {
-          "Microsoft.AspNet.WebApi.Client": "5.2.3",
-          "Microsoft.AspNetCore.Mvc.Core": "2.0.2",
-          "Microsoft.AspNetCore.Mvc.Formatters.Json": "2.0.2",
-          "Microsoft.AspNetCore.WebUtilities": "2.0.1"
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll": {}
-        },
-        "compile": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll": {}
         }
       },
       "Microsoft.AspNetCore.NodeServices/2.0.2": {
@@ -2375,14 +2366,6 @@
         },
         "compile": {
           "lib/netcoreapp2.0/MySql.Data.dll": {}
-        }
-      },
-      "MySql.Web/6.10.5": {
-        "runtime": {
-          "lib/net452/MySql.Web.dll": {}
-        },
-        "compile": {
-          "lib/net452/MySql.Web.dll": {}
         }
       },
       "Newtonsoft.Json/10.0.1": {
@@ -4082,19 +4065,26 @@
       "serviceable": false,
       "sha512": ""
     },
-    "AlexaSkillsKit.NET/1.5.2": {
+    "Alexa.NET/1.4.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-L7KL/jLA9gtNBaRy+7xZ9q386Y3Nod9jo28Vrm/7zWDp5OLFIaVZjBVVmkrtk51aC6zbCcDztuJ/JT0pafzi6g==",
-      "path": "alexaskillskit.net/1.5.2",
-      "hashPath": "alexaskillskit.net.1.5.2.nupkg.sha512"
+      "sha512": "sha512-9l60n3eO+QZe/OLCd2jFTydMeoDiYjZDinlbBZOsmJrZKCTd9k+gsj6zQoB90LIrzr9ia6GEtheQnzE4Xd70gg==",
+      "path": "alexa.net/1.4.2",
+      "hashPath": "alexa.net.1.4.2.nupkg.sha512"
     },
-    "BouncyCastle/1.8.1": {
+    "Alexa.NET.Security/1.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-r0w4ciJJ916V3dYRdtq8uF4Nz6oAv8Mia1JEAPKgDDRzMTcht8uK/Qam9WtvIg9SaFa+4OTox+GG6huB07nC1g==",
-      "path": "bouncycastle/1.8.1",
-      "hashPath": "bouncycastle.1.8.1.nupkg.sha512"
+      "sha512": "sha512-8V/77tD96VG+G7NTGa1Z5JNaHI8cZnNW1t7trXla2nGZGsun7FSBvW+9cQ4FGlto2hzgz1AtExcVuOrDlC4jTQ==",
+      "path": "alexa.net.security/1.0.0",
+      "hashPath": "alexa.net.security.1.0.0.nupkg.sha512"
+    },
+    "Alexa.NET.Security.Middleware/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CUiBLcY5eUGKO43ksOHu3vW0sqQuvaRogZw/FPXtAB15tNQyQBJbhdDNoZ8JBFzE+b9l1UPPZlnZKTACVE8rRQ==",
+      "path": "alexa.net.security.middleware/1.0.0",
+      "hashPath": "alexa.net.security.middleware.1.0.0.nupkg.sha512"
     },
     "Libuv/1.10.0": {
       "type": "package",
@@ -4123,13 +4113,6 @@
       "sha512": "sha512-RWxdX90MY6tNF8S5lwRvJcHiBMIWwVLCxd4TGIEl3X0yAKaolY2vs4zTCvyCIVkEAMs1aInTgWkYwOjzYvAHWw==",
       "path": "microsoft.applicationinsights.dependencycollector/2.4.1",
       "hashPath": "microsoft.applicationinsights.dependencycollector.2.4.1.nupkg.sha512"
-    },
-    "Microsoft.AspNet.WebApi.Client/5.2.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-3kiI8peSXbXHDDrRuo+QaX0iCEVRe0nvn2dBDRw656uPX32UalbBlSIDUDlJxu05eau4tnuhsikiUuugvvoUoQ==",
-      "path": "microsoft.aspnet.webapi.client/5.2.3",
-      "hashPath": "microsoft.aspnet.webapi.client.5.2.3.nupkg.sha512"
     },
     "Microsoft.AspNetCore/2.0.1": {
       "type": "package",
@@ -4550,13 +4533,6 @@
       "sha512": "sha512-KANH2/5vbTI/jfwJcItbzSuPLAex6HfG9sqKus2dJc0TgWHc6Buc4BFT1qDKl6MW2JAZcQQ7/r5iNd50jtCHeg==",
       "path": "microsoft.aspnetcore.mvc.viewfeatures/2.0.2",
       "hashPath": "microsoft.aspnetcore.mvc.viewfeatures.2.0.2.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Mvc.WebApiCompatShim/2.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-XxlJ1VBWWkplfH+PQZBxROtnbI3SplwTyVWudW/YKjaS67WBd2sp56VwAWIl9nKTFFfLbS+/MpByHE7gVKDY4Q==",
-      "path": "microsoft.aspnetcore.mvc.webapicompatshim/2.0.2",
-      "hashPath": "microsoft.aspnetcore.mvc.webapicompatshim.2.0.2.nupkg.sha512"
     },
     "Microsoft.AspNetCore.NodeServices/2.0.2": {
       "type": "package",
@@ -5250,13 +5226,6 @@
       "sha512": "sha512-XSrM/JWLHfikLZPn1yr/rERDPFeqzjr0f6aKGolA2Mxl+4RZiYZqFEu8lRJ4UwwOI3sa3KqLxUBva4rsrL+G6Q==",
       "path": "mysql.data/6.10.5",
       "hashPath": "mysql.data.6.10.5.nupkg.sha512"
-    },
-    "MySql.Web/6.10.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-PGN+GdIqfDzWfpTS3QyWlbKMJzTkbSMXYUuFjMwxYYFpLH9olNCV6MNfnOgrRIbruIS0q4tLgVoLJ+0IFwTI4Q==",
-      "path": "mysql.web/6.10.5",
-      "hashPath": "mysql.web.6.10.5.nupkg.sha512"
     },
     "Newtonsoft.Json/10.0.1": {
       "type": "package",

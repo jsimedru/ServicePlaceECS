@@ -2,27 +2,42 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
-      "AlexaSkillsKit.NET/1.5.2": {
+      "Alexa.NET/1.4.2": {
         "type": "package",
         "dependencies": {
-          "BouncyCastle": "1.8.1",
-          "Microsoft.AspNet.WebApi.Client": "5.2.3",
-          "Newtonsoft.Json": "7.0.1"
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
-          "lib/net45/AlexaSkillsKit.dll": {}
+          "lib/netstandard1.6/Alexa.NET.dll": {}
         },
         "runtime": {
-          "lib/net45/AlexaSkillsKit.dll": {}
+          "lib/netstandard1.6/Alexa.NET.dll": {}
         }
       },
-      "BouncyCastle/1.8.1": {
+      "Alexa.NET.Security/1.0.0": {
         "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
+        },
         "compile": {
-          "lib/BouncyCastle.Crypto.dll": {}
+          "lib/netstandard1.3/Alexa.NET.Security.dll": {}
         },
         "runtime": {
-          "lib/BouncyCastle.Crypto.dll": {}
+          "lib/netstandard1.3/Alexa.NET.Security.dll": {}
+        }
+      },
+      "Alexa.NET.Security.Middleware/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Alexa.NET.Security": "1.0.0",
+          "Microsoft.AspNetCore.Http": "2.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Alexa.NET.Security.Middleware.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Alexa.NET.Security.Middleware.dll": {}
         }
       },
       "Libuv/1.10.0": {
@@ -114,15 +129,6 @@
         },
         "runtime": {
           "lib/netstandard1.6/Microsoft.AI.DependencyCollector.dll": {}
-        }
-      },
-      "Microsoft.AspNet.WebApi.Client/5.2.3": {
-        "type": "package",
-        "compile": {
-          "lib/net45/System.Net.Http.Formatting.dll": {}
-        },
-        "runtime": {
-          "lib/net45/System.Net.Http.Formatting.dll": {}
         }
       },
       "Microsoft.AspNetCore/2.0.1": {
@@ -1121,21 +1127,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.ViewFeatures.dll": {}
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.WebApiCompatShim/2.0.2": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNet.WebApi.Client": "5.2.2",
-          "Microsoft.AspNetCore.Mvc.Core": "2.0.2",
-          "Microsoft.AspNetCore.Mvc.Formatters.Json": "2.0.2",
-          "Microsoft.AspNetCore.WebUtilities": "2.0.1"
-        },
-        "compile": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll": {}
         }
       },
       "Microsoft.AspNetCore.NodeServices/2.0.2": {
@@ -2796,15 +2787,6 @@
             "codeLanguage": "any",
             "copyToOutput": false
           }
-        }
-      },
-      "MySql.Web/6.10.5": {
-        "type": "package",
-        "compile": {
-          "lib/net452/MySql.Web.dll": {}
-        },
-        "runtime": {
-          "lib/net452/MySql.Web.dll": {}
         }
       },
       "NETStandard.Library/2.0.0": {
@@ -4926,25 +4908,35 @@
     }
   },
   "libraries": {
-    "AlexaSkillsKit.NET/1.5.2": {
-      "sha512": "L7KL/jLA9gtNBaRy+7xZ9q386Y3Nod9jo28Vrm/7zWDp5OLFIaVZjBVVmkrtk51aC6zbCcDztuJ/JT0pafzi6g==",
+    "Alexa.NET/1.4.2": {
+      "sha512": "9l60n3eO+QZe/OLCd2jFTydMeoDiYjZDinlbBZOsmJrZKCTd9k+gsj6zQoB90LIrzr9ia6GEtheQnzE4Xd70gg==",
       "type": "package",
-      "path": "alexaskillskit.net/1.5.2",
+      "path": "alexa.net/1.4.2",
       "files": [
-        "AlexaSkillsKit.NET.1.5.2.nupkg.sha512",
-        "AlexaSkillsKit.NET.nuspec",
-        "lib/net45/AlexaSkillsKit.dll"
+        "Alexa.NET.1.4.2.nupkg.sha512",
+        "Alexa.NET.nuspec",
+        "lib/netstandard1.6/Alexa.NET.dll"
       ]
     },
-    "BouncyCastle/1.8.1": {
-      "sha512": "r0w4ciJJ916V3dYRdtq8uF4Nz6oAv8Mia1JEAPKgDDRzMTcht8uK/Qam9WtvIg9SaFa+4OTox+GG6huB07nC1g==",
+    "Alexa.NET.Security/1.0.0": {
+      "sha512": "8V/77tD96VG+G7NTGa1Z5JNaHI8cZnNW1t7trXla2nGZGsun7FSBvW+9cQ4FGlto2hzgz1AtExcVuOrDlC4jTQ==",
       "type": "package",
-      "path": "bouncycastle/1.8.1",
+      "path": "alexa.net.security/1.0.0",
       "files": [
-        "BouncyCastle.1.8.1.nupkg.sha512",
-        "BouncyCastle.nuspec",
-        "Readme.txt",
-        "lib/BouncyCastle.Crypto.dll"
+        "alexa.net.security.1.0.0.nupkg.sha512",
+        "alexa.net.security.nuspec",
+        "lib/netstandard1.3/Alexa.NET.Security.dll"
+      ]
+    },
+    "Alexa.NET.Security.Middleware/1.0.0": {
+      "sha512": "CUiBLcY5eUGKO43ksOHu3vW0sqQuvaRogZw/FPXtAB15tNQyQBJbhdDNoZ8JBFzE+b9l1UPPZlnZKTACVE8rRQ==",
+      "type": "package",
+      "path": "alexa.net.security.middleware/1.0.0",
+      "files": [
+        "alexa.net.security.middleware.1.0.0.nupkg.sha512",
+        "alexa.net.security.middleware.nuspec",
+        "lib/netstandard2.0/Alexa.NET.Security.Middleware.dll",
+        "lib/netstandard2.0/Alexa.NET.Security.Middleware.xml"
       ]
     },
     "Libuv/1.10.0": {
@@ -5014,19 +5006,6 @@
         "lib/net45/Microsoft.AI.DependencyCollector.dll",
         "lib/netstandard1.6/Microsoft.AI.DependencyCollector.dll",
         "lib/netstandard1.6/Microsoft.AI.DependencyCollector.xml"
-      ]
-    },
-    "Microsoft.AspNet.WebApi.Client/5.2.3": {
-      "sha512": "3kiI8peSXbXHDDrRuo+QaX0iCEVRe0nvn2dBDRw656uPX32UalbBlSIDUDlJxu05eau4tnuhsikiUuugvvoUoQ==",
-      "type": "package",
-      "path": "microsoft.aspnet.webapi.client/5.2.3",
-      "files": [
-        "lib/net45/System.Net.Http.Formatting.dll",
-        "lib/net45/System.Net.Http.Formatting.xml",
-        "lib/portable-wp8+netcore45+net45+wp81+wpa81/System.Net.Http.Formatting.dll",
-        "lib/portable-wp8+netcore45+net45+wp81+wpa81/System.Net.Http.Formatting.xml",
-        "microsoft.aspnet.webapi.client.5.2.3.nupkg.sha512",
-        "microsoft.aspnet.webapi.client.nuspec"
       ]
     },
     "Microsoft.AspNetCore/2.0.1": {
@@ -5704,17 +5683,6 @@
         "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.ViewFeatures.xml",
         "microsoft.aspnetcore.mvc.viewfeatures.2.0.2.nupkg.sha512",
         "microsoft.aspnetcore.mvc.viewfeatures.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Mvc.WebApiCompatShim/2.0.2": {
-      "sha512": "XxlJ1VBWWkplfH+PQZBxROtnbI3SplwTyVWudW/YKjaS67WBd2sp56VwAWIl9nKTFFfLbS+/MpByHE7gVKDY4Q==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.mvc.webapicompatshim/2.0.2",
-      "files": [
-        "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.WebApiCompatShim.xml",
-        "microsoft.aspnetcore.mvc.webapicompatshim.2.0.2.nupkg.sha512",
-        "microsoft.aspnetcore.mvc.webapicompatshim.nuspec"
       ]
     },
     "Microsoft.AspNetCore.NodeServices/2.0.2": {
@@ -7695,19 +7663,6 @@
         "lib/netstandard1.3/MySql.Data.xml",
         "lib/netstandard2.0/MySql.Data.dll",
         "lib/netstandard2.0/MySql.Data.xml"
-      ]
-    },
-    "MySql.Web/6.10.5": {
-      "sha512": "PGN+GdIqfDzWfpTS3QyWlbKMJzTkbSMXYUuFjMwxYYFpLH9olNCV6MNfnOgrRIbruIS0q4tLgVoLJ+0IFwTI4Q==",
-      "type": "package",
-      "path": "mysql.web/6.10.5",
-      "files": [
-        "MySql.Web.6.10.5.nupkg.sha512",
-        "MySql.Web.nuspec",
-        "content/web.config.transform",
-        "contentFiles/any/net452/web.config.transform",
-        "lib/net452/MySql.Web.dll",
-        "lib/net452/MySql.Web.xml"
       ]
     },
     "NETStandard.Library/2.0.0": {
@@ -12922,37 +12877,41 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
-      "AlexaSkillsKit.NET >= 1.5.2",
+      "Alexa.NET >= 1.4.2",
+      "Alexa.NET.Security.Middleware >= 1.0.0",
       "Microsoft.AspNetCore.All >= 2.0.5",
-      "Microsoft.AspNetCore.Mvc.WebApiCompatShim >= 2.0.2",
       "Microsoft.NETCore.App >= 2.0.0",
-      "MySql.Data >= 6.10.5",
-      "MySql.Web >= 6.10.5"
+      "MySql.Data >= 6.10.5"
     ]
   },
   "packageFolders": {
-    "/home/mlangston/.nuget/packages/": {},
-    "/home/mlangston/.dotnet/sdk/NuGetFallbackFolder": {}
+    "C:\\Users\\mlangston\\.nuget\\packages\\": {},
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
     "restore": {
-      "projectUniqueName": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/SPECS_Web_Server.csproj",
+      "projectUniqueName": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\SPECS_Web_Server.csproj",
       "projectName": "SPECS_Web_Server",
-      "projectPath": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/SPECS_Web_Server.csproj",
-      "packagesPath": "/home/mlangston/.nuget/packages/",
-      "outputPath": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/obj/",
+      "projectPath": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\SPECS_Web_Server.csproj",
+      "packagesPath": "C:\\Users\\mlangston\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "/home/mlangston/.dotnet/sdk/NuGetFallbackFolder"
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "/home/mlangston/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\mlangston\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -12969,17 +12928,17 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "AlexaSkillsKit.NET": {
+          "Alexa.NET": {
             "target": "Package",
-            "version": "[1.5.2, )"
+            "version": "[1.4.2, )"
+          },
+          "Alexa.NET.Security.Middleware": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
             "version": "[2.0.5, )"
-          },
-          "Microsoft.AspNetCore.Mvc.WebApiCompatShim": {
-            "target": "Package",
-            "version": "[2.0.2, )"
           },
           "Microsoft.NETCore.App": {
             "target": "Package",
@@ -12987,10 +12946,6 @@
             "autoReferenced": true
           },
           "MySql.Data": {
-            "target": "Package",
-            "version": "[6.10.5, )"
-          },
-          "MySql.Web": {
             "target": "Package",
             "version": "[6.10.5, )"
           }
@@ -13002,47 +12957,5 @@
         "warn": true
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'AlexaSkillsKit.NET 1.5.2' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
-      "libraryId": "AlexaSkillsKit.NET",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'BouncyCastle 1.8.1' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
-      "libraryId": "BouncyCastle",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.AspNet.WebApi.Client 5.2.3' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.AspNet.WebApi.Client",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'MySql.Web 6.10.5' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETCoreApp,Version=v2.0'. This package may not be fully compatible with your project.",
-      "libraryId": "MySql.Web",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v2.0"
-      ]
-    }
-  ]
+  }
 }

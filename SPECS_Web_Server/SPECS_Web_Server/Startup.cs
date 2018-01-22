@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SPECS_Web_Server.Data;
 using SPECS_Web_Server.Models;
 
 namespace SPECS_Web_Server
@@ -22,13 +23,9 @@ namespace SPECS_Web_Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Also adding API wrapper to use older .Net libraries
-            services.AddMvc().AddWebApiConventions();
+            services.AddMvc();
 
-            /*
-            * Needs Work
-            */
-            services.Add(new ServiceDescriptor(typeof(UserContext), new UserContext(Configuration.GetConnectionString("specsConnectionString"))));
+            services.AddTransient<AppDb>(_ => new AppDb(Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +49,7 @@ namespace SPECS_Web_Server
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
