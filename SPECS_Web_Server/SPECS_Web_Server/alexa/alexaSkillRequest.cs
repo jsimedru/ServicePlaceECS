@@ -13,6 +13,9 @@ using SPECS_Web_Server.Data;
 
 namespace SPECS_Web_Server.Controllers
 {
+    /// <summary>
+    /// Process incoming alexa request, and route to appropriate entity TODO: Full Re-Implementation
+    /// </summary>
     public class AlexaSkillRequest
     {
         private const string ALEXA_APPLICATION_ID = "amzn1.ask.skill.90cd2822-d0b2-4b14-bebe-8a14f4b44718";

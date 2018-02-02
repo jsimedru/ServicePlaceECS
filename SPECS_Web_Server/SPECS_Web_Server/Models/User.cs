@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SPECS_Web_Server.Models
 {
     /// <summary>
-    /// Model for proper(?) DB re-implementation
+    /// User Account Model
     /// </summary>
     public class User
     {
@@ -20,8 +20,6 @@ namespace SPECS_Web_Server.Models
 
         public int ID { get; set; }
 
-        public string AlexaID { get; set; }
-
         public string Username { get; set; }
 
         //BAD -- FIX
@@ -29,13 +27,13 @@ namespace SPECS_Web_Server.Models
      
         public string Email { get; set; }
 
-        public string Color { get; set; }
-
-        public string DeviceIDs { get; set; }
+        public int Phone { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public string Address { get; set; }
 
         public User(AppDb db = null) => Db = db;
 
