@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using SPECS_Web_Server.Models;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 namespace SPECS_Web_Server.Data
 {
     public class UserQuery
@@ -13,9 +15,9 @@ namespace SPECS_Web_Server.Data
         public readonly AppDb Db;
         public UserQuery(AppDb db) => Db = db;
 
-    /// <summary>
-    /// Retrieve all users
-    /// </summary>
+        /// <summary>
+        /// Retrieve all users
+        /// </summary>
         public List<User> GetAllUsers()
         {
             List<User> list = new List<User>();
@@ -41,20 +43,28 @@ namespace SPECS_Web_Server.Data
             return list;
         }
 
-    /// <summary>
-    /// Registers a user, TODO: Password hash/store implementation
-    /// </summary>
-        public bool RegisterUser(User user)
+        /// <summary>
+        /// Registers a user, TODO: Test implementation, do we need to open & close connection here??
+        /// </summary>
+        public async Task<bool> RegisterUserAsync(User user, String pwd)
             {
                 if (user == null)
                 {
                     return false;
                 }
                 try
-                {
+                {   
+                    //Insert User into user Table
                     string cmdString = "INSERT INTO user_data (username, firstname, lastname, email, phone, address) VALUES ('" + user.Username + "', '" + user.FirstName + "', '" + user.LastName + "', '" + user.Email + "', '" + user.Phone + "', '" + user.Address + "');";
                     MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
-                    cmd.ExecuteNonQuery();
+                    await cmd.ExecuteNonQueryAsync();
+                    long insertedUserID = cmd.LastInsertedId;
+
+                    //Insert salt & hash into auth table
+                    var salthash = hashpwd(pwd);
+                    cmdString = "INSERT INTO auth (userid, phash, psalt) VALUES ('" + insertedUserID + "', '" + salthash.hash + "', '" + salthash.salt + "');";
+                    cmd = new MySqlCommand(cmdString, Db.Connection);
+                    await cmd.ExecuteNonQueryAsync();
                     return true;
                 } catch (Exception e)
                 {
@@ -115,6 +125,24 @@ namespace SPECS_Web_Server.Data
                 Console.WriteLine(e.ToString());
                 return false;
             }
+        }
+
+        ///<summary>
+        ///Hashes password returning (salt, saltedhash)
+        ///</summary>
+        private (byte[] salt, string hash) hashpwd(String pwd){
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create() ){
+                rng.GetBytes(salt);
+            }
+            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: pwd,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+            Console.WriteLine($"Hashed: {hash}");
+            return (salt, hash);
         }
     }
 }
