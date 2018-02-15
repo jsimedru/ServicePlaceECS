@@ -54,7 +54,7 @@ namespace SPECS_Web_Server.Data
                 try
                 {   
                     //Insert User into user Table
-                    string cmdString = "INSERT INTO user (username, firstname, lastname, email, phone, address) VALUES ('" + user.Username + "', '" + user.FirstName + "', '" + user.LastName + "', '" + user.Email + "', '" + user.Phone + "', '" + user.Address + "');";
+                    string cmdString = "INSERT INTO user (username, firstname, lastname, email, phone, address1) VALUES ('" + user.Username + "', '" + user.FirstName + "', '" + user.LastName + "', '" + user.Email + "', '" + user.Phone + "', '" + user.Address + "');";
                     MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
                     await cmd.ExecuteNonQueryAsync();
                     long insertedUserID = cmd.LastInsertedId;
