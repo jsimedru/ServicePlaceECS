@@ -35,7 +35,7 @@ namespace SPECS_Web_Server.Data
                             Password = reader.GetString("password"),
                             Phone = reader.GetInt32("phone"),
                             Email = reader.GetString("email"),
-                            Address = reader.GetString("address")
+                            Address = reader.GetString("address1")
                         });
                     }
                 } catch(Exception e){
@@ -123,7 +123,7 @@ namespace SPECS_Web_Server.Data
             try{
                 //Insert salt & hash into auth table
                 var salthash = hashpwd(pwd);
-                string cmdString = "INSERT INTO auth (userid, phash, psalt) VALUES ('" + userid + "', '" + salthash.hash + "', '" + salthash.salt + "');";
+                string cmdString = "INSERT INTO auth (userid, phash, psalt) VALUES ('" + userid + "', '" + salthash.hash + "', '" + Convert.ToBase64String(salthash.salt) + "');";
                 MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
                 return await cmd.ExecuteNonQueryAsync();
             } catch (Exception e){

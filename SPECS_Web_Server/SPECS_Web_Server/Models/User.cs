@@ -16,7 +16,6 @@ namespace SPECS_Web_Server.Models
 
         [JsonIgnore]
         public AppDb Db { get; set; }
-        //private UserContext context;
 
         public int ID { get; set; }
 
