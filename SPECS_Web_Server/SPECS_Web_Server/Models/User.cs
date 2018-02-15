@@ -27,7 +27,7 @@ namespace SPECS_Web_Server.Models
      
         public string Email { get; set; }
 
-        public int Phone { get; set; }
+        public long Phone { get; set; }
 
         public string FirstName { get; set; }
 

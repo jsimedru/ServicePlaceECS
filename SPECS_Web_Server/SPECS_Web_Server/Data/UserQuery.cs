@@ -16,7 +16,7 @@ namespace SPECS_Web_Server.Data
         public UserQuery(AppDb db) => Db = db;
 
         /// <summary>
-        /// Retrieve all users
+        /// Retrieve all users, TODO: Make ASYNC
         /// </summary>
         public List<User> GetAllUsers()
         {
@@ -24,21 +24,24 @@ namespace SPECS_Web_Server.Data
             MySqlCommand cmd = new MySqlCommand("SELECT * FROM user_data", Db.Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                while (reader.Read())
-                {
-                    list.Add(new User()
-                    {
-                        ID = reader.GetInt32("id"),
-                        FirstName = reader.GetString("firstname"),
-                        LastName = reader.GetString("lastname"),
-                        Username = reader.GetString("username"),
-                        Password = reader.GetString("password"),
-                        Phone = reader.GetInt32("phone"),
-                        Email = reader.GetString("email"),
-                        Address = reader.GetString("address")
-                    });
-                }
-
+                try{
+                    while (reader.Read()) {
+                        list.Add(new User()
+                        {
+                            ID = reader.GetInt32("id"),
+                            FirstName = reader.GetString("firstname"),
+                            LastName = reader.GetString("lastname"),
+                            Username = reader.GetString("username"),
+                            Password = reader.GetString("password"),
+                            Phone = reader.GetInt32("phone"),
+                            Email = reader.GetString("email"),
+                            Address = reader.GetString("address")
+                        });
+                    }
+                } catch(Exception e){
+                    Console.WriteLine(e.ToString());
+                } 
+                
             }
             return list;
         }
@@ -48,23 +51,16 @@ namespace SPECS_Web_Server.Data
         /// </summary>
         public async Task<bool> RegisterUserAsync(User user, String pwd)
             {
-                if (user == null)
-                {
-                    return false;
-                }
                 try
                 {   
                     //Insert User into user Table
-                    string cmdString = "INSERT INTO user_data (username, firstname, lastname, email, phone, address) VALUES ('" + user.Username + "', '" + user.FirstName + "', '" + user.LastName + "', '" + user.Email + "', '" + user.Phone + "', '" + user.Address + "');";
+                    string cmdString = "INSERT INTO user (username, firstname, lastname, email, phone, address) VALUES ('" + user.Username + "', '" + user.FirstName + "', '" + user.LastName + "', '" + user.Email + "', '" + user.Phone + "', '" + user.Address + "');";
                     MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
                     await cmd.ExecuteNonQueryAsync();
                     long insertedUserID = cmd.LastInsertedId;
 
-                    //Insert salt & hash into auth table
-                    var salthash = hashpwd(pwd);
-                    cmdString = "INSERT INTO auth (userid, phash, psalt) VALUES ('" + insertedUserID + "', '" + salthash.hash + "', '" + salthash.salt + "');";
-                    cmd = new MySqlCommand(cmdString, Db.Connection);
-                    await cmd.ExecuteNonQueryAsync();
+                    //Store Password
+                    await insertUserPassword(insertedUserID, pwd);
                     return true;
                 } catch (Exception e)
                 {
@@ -80,7 +76,7 @@ namespace SPECS_Web_Server.Data
         {
             User user;
             //Re-implement using relational table to get user alexa_id
-            string cmdString = "SELECT * FROM user_data WHERE id_alexa='" + alexaID + "';";
+            string cmdString = "SELECT * FROM user WHERE id_alexa='" + alexaID + "';";
             MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -89,10 +85,6 @@ namespace SPECS_Web_Server.Data
                     user = new User()
                     {
                         ID = reader.GetInt32("id"),
-                        /* Re-implement with correct DB Structure
-                        AlexaID = reader.GetString("id_alexa"),
-                        Color = reader.GetString("color"),
-                        DeviceIDs = reader.GetString("id_devices"), */
                         FirstName = reader.GetString("firstname"),
                         LastName = reader.GetString("lastname"),
                         Username = reader.GetString("username"),
@@ -116,7 +108,7 @@ namespace SPECS_Web_Server.Data
             try
             {
                 //Re-implement using proper alexa skill tables & relational tables
-                string cmdString = "UPDATE user_data SET color='" + color + "' WHERE 'id'='" + user.ID + "';";
+                string cmdString = "UPDATE user SET color='" + color + "' WHERE 'id'='" + user.ID + "';";
                 MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
                 cmd.ExecuteNonQuery();
                 return true;
@@ -124,6 +116,19 @@ namespace SPECS_Web_Server.Data
             {
                 Console.WriteLine(e.ToString());
                 return false;
+            }
+        }
+
+        private async Task<int> insertUserPassword(long userid, string pwd){
+            try{
+                //Insert salt & hash into auth table
+                var salthash = hashpwd(pwd);
+                string cmdString = "INSERT INTO auth (userid, phash, psalt) VALUES ('" + userid + "', '" + salthash.hash + "', '" + salthash.salt + "');";
+                MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+                return await cmd.ExecuteNonQueryAsync();
+            } catch (Exception e){
+                Console.WriteLine(e.ToString());
+                return -1;
             }
         }
 
@@ -144,5 +149,15 @@ namespace SPECS_Web_Server.Data
             Console.WriteLine($"Hashed: {hash}");
             return (salt, hash);
         }
+
+        ///<summary>
+        ///Verify existing user's password, TODO: Implement
+        ///</summary>
+        public bool verifyUserPassword(string pwd, User user) => throw new NotImplementedException();
+
+        ///<summary>
+        ///Verify existing user's password, TODO: Implement
+        ///</summary>
+        public bool verifyUserPassword(string pwd, string email) => throw new NotImplementedException();
     }
 }

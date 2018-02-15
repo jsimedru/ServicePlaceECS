@@ -47,7 +47,7 @@ namespace SPECS_Web_Server.Controllers
                 {
                     if (intentRequest.Intent.Slots.ContainsKey("color"))
                     {
-                        speech.Ssml = "<speak>Your color is " + result.Color + "</speak>";
+                        speech.Ssml = "<speak>Your color is " ;
                         response = ResponseBuilder.Tell(speech);
                     }
                 }
