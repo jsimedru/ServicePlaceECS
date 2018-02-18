@@ -13,7 +13,7 @@ namespace SPECS_Web_Server.Data
 
         public AppDb()
         {
-            Connection = new MySqlConnection("server=localhost;port=3306;user id=root;password=root;database=specs;");
+            Connection = new MySqlConnection("server=54.167.222.234;port=3306;user id=dev_user;password=3eCxhhavJ2dx8P2KVDPajy5ZaXtmDTmP;database=specs;");
         }
 
         public AppDb(string connectionString)

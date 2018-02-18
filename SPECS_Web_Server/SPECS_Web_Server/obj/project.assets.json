@@ -12885,33 +12885,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mlangston\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/home/mlangston/.nuget/packages/": {},
+    "/home/mlangston/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
-    "restoreSettings": {
-      "hideWarningsAndErrors": true
-    },
     "restore": {
-      "projectUniqueName": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\SPECS_Web_Server.csproj",
+      "projectUniqueName": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/SPECS_Web_Server.csproj",
       "projectName": "SPECS_Web_Server",
-      "projectPath": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\SPECS_Web_Server.csproj",
-      "packagesPath": "C:\\Users\\mlangston\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mlangston\\source\\repos\\SPECS_Web_Server\\SPECS_Web_Server\\obj\\",
+      "projectPath": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/SPECS_Web_Server.csproj",
+      "packagesPath": "/home/mlangston/.nuget/packages/",
+      "outputPath": "/home/mlangston/Dev/SPElderCare/SPECS_Web_Server/SPECS_Web_Server/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/home/mlangston/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\mlangston\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/home/mlangston/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
