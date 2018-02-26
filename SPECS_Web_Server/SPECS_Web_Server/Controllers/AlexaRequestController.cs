@@ -40,8 +40,8 @@ namespace SPECS_Web_Server.Controllers
             //Return built response from alexa/alexaSkills
             //FIX
             return new OkObjectResult(response);
-            
+
         }
     }
-    
+
 }
