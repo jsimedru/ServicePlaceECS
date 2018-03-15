@@ -10,6 +10,10 @@ using Alexa.NET.Request;
 using Alexa.NET.Response;
 using Alexa.NET.Request.Type;
 using SPECS_Web_Server.Data;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+using System.Threading.Tasks;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -18,22 +22,26 @@ namespace SPECS_Web_Server.Controllers
     /// </summary>
     public class AlexaSkillRequest
     {
-        private const string ALEXA_APPLICATION_ID = "amzn1.ask.skill.90cd2822-d0b2-4b14-bebe-8a14f4b44718";
+        //TODO: Move to proper storage location
+        private const string ALEXA_APPLICATION_ID = "amzn1.ask.skill.18e1bdcd-32e1-444b-8ef2-336b371e2d82";
+        private const string TWILIO_ACCOUNT_SID = "ACbfd1cdfeca56268e901a060afab370d4";
+        private const string TWILIO_AUTH_TOKEN = "1b11a32283f190d5b66c3ec11e09ba34";
         private SkillRequest intentRequest;
 
         public AlexaSkillRequest(SkillRequest _intentRequest)
         {
             intentRequest = _intentRequest;
         }
+
+        //TODO: Use Alexa.NET.Middleware to verify requests come from Amazon
         public SkillResponse ProcessRequest(SkillRequest _skillRequest)
         {
-            //TODO: Use Alexa.NET.Middleware to verify requests come from Amazon
-
-            var intentRequest = _skillRequest.Request as IntentRequest;
             Models.User result;
+            var intentRequest = _skillRequest.Request as IntentRequest;
             var speech = new Alexa.NET.Response.SsmlOutputSpeech();
             var response = new SkillResponse();
 
+            //Get User which triggered request
             using (var db = new AppDb())
             {
                 db.Connection.OpenAsync();
@@ -43,39 +51,20 @@ namespace SPECS_Web_Server.Controllers
 
             if (result != null)
             {
-                if (intentRequest.Intent.Name.Equals("color_get"))
-                {
-                    if (intentRequest.Intent.Slots.ContainsKey("color"))
-                    {
-                        speech.Ssml = "<speak>Your color is " ;
-                        response = ResponseBuilder.Tell(speech);
-                    }
-                }
-                else if (intentRequest.Intent.Name.Equals("color_set"))
-                {
-                    if (intentRequest.Intent.Slots.ContainsKey("color"))
-                    {
-                        bool queryStatus;
-                        Slot color = intentRequest.Intent.Slots.GetValueOrDefault("color");
-                        using (var db = new AppDb())
-                        {
-                            db.Connection.OpenAsync();
-                            var query = new UserQuery(db);
-                            queryStatus = query.UpdateUserColorByAlexaID(result, color.Value);
-                        }
-                        if (queryStatus)
-                        {
-                            speech.Ssml = "<speak>Your color now set to " + color.Value + "</speak>";
-                            //TODO: Call function to set user's color in db
-                            response = ResponseBuilder.Tell(speech);
-                        } else
-                        {
-                            speech.Ssml = "<speak>Please try again. Error 3</speak>";
-                            response = ResponseBuilder.Tell(speech);
-                        }
-                        
-                    }
-                    
+                switch (intentRequest.Intent.Name){
+                    case "sendalert":
+                        safetyAlert(result);
+                        //Generate Alexa request
+                        var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+                        safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
+                        response = ResponseBuilder.Tell(safetyResponse);
+                        break;
+
+                    default:
+                        var defaultResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+                        defaultResponse.Ssml = "<speak>An error occured, please try again.</speak>";
+                        response = ResponseBuilder.Tell(defaultResponse);
+                        break;
                 }
             }
             else
@@ -84,6 +73,24 @@ namespace SPECS_Web_Server.Controllers
                 response = ResponseBuilder.Tell(speech);
             }
             return response;
+        }
+
+        //TODO: Further develop Emergency Contact system & propery retrieve emergency contacts and contact first one on the list.
+        private async void safetyAlert(Models.User user){
+            TwilioClient.Init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+            try {
+                //Send Message through Twilio API
+                var message = await MessageResource.CreateAsync(
+                    to: new PhoneNumber(user.Phone.ToString()),
+                    from: new PhoneNumber("+16147675740"),
+                    body: user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
+
+                Console.WriteLine(message.Sid);
+
+            } catch (Exception e){
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
+            }
         }
     }
 }

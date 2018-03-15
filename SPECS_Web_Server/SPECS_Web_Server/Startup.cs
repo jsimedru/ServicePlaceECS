@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Alexa.NET.Security.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -43,6 +44,7 @@ namespace SPECS_Web_Server
 
             app.UseStaticFiles();
 
+            //app.UseAlexaRequestValidation();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
