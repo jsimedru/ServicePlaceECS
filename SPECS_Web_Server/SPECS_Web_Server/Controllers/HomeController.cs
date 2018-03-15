@@ -33,5 +33,26 @@ namespace SPECS_Web_Server.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        public IActionResult Login()
+        {
+            ViewData["Message"] = "Login Page";
+
+            return View();
+        }
+
+        public IActionResult Create_Account()
+        {
+            ViewData["Message"] = "Create Your Account";
+
+            return View();
+        }
+
+        public IActionResult OAuth()
+        {
+            ViewData["Message"] = "oAuth Page";
+
+            return View();
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace SPECS_Web_Server.Data
                     {
                         list.Add(new User()
                         {
-                            ID = reader.GetInt32("id"),
+                            ID = reader.GetInt64("userid"),
                             FirstName = reader.GetString("firstname"),
                             LastName = reader.GetString("lastname"),
                             Username = reader.GetString("username"),
@@ -61,11 +61,11 @@ namespace SPECS_Web_Server.Data
             {
                 try{
                     while (reader.Read()) {
-                        user.ID = reader.GetInt32("userid");
+                        user.ID = reader.GetInt64("userid");
                         user.FirstName = reader.GetString("firstname");
                         user.LastName = reader.GetString("lastname");
                         user.Username = reader.GetString("username");
-                        user.Phone = reader.GetInt32("phone");
+                        user.Phone = reader.GetInt64("phone");
                         user.Email = reader.GetString("email");
                         user.Address = reader.GetString("address1");
                     }
@@ -107,7 +107,7 @@ namespace SPECS_Web_Server.Data
         {
             User user;
             //Re-implement using relational table to get user alexa_id
-            string cmdString = "SELECT * FROM user WHERE id_alexa='" + alexaID + "';";
+            string cmdString = "SELECT user.* FROM user INNER JOIN auth WHERE auth.userid = user.userid AND alexaid='" + alexaID + "';";
             MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -115,11 +115,12 @@ namespace SPECS_Web_Server.Data
                 {
                     user = new User()
                     {
-                        ID = reader.GetInt32("id"),
+                        ID = reader.GetInt64("userid"),
                         FirstName = reader.GetString("firstname"),
                         LastName = reader.GetString("lastname"),
                         Username = reader.GetString("username"),
-                        Email = reader.GetString("email")
+                        Email = reader.GetString("email"),
+                        Phone = reader.GetInt64("phone")
                     };
                     return user;
                 }
@@ -263,7 +264,7 @@ namespace SPECS_Web_Server.Data
                     {
                         list.Add(new MedicalSensorData()
                         {
-                            userID = reader.GetInt32("userid"),
+                            userID = reader.GetInt64("userid"),
                             BloodPressure = reader.GetString("bp"),
                             ECG = reader.GetFloat("ecg"),
                             SpO2 = reader.GetFloat("spo2"),

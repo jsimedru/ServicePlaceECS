@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "17ef83717025641e1fc649d89fe87a52fdf41c40"
+    "signature": "327bc078eed5a002ea9abe8a15b259de16a6264d"
   },
   "compilationOptions": {
     "defines": [
@@ -27,7 +27,8 @@
           "Alexa.NET.Security.Middleware": "1.0.0",
           "Microsoft.AspNetCore.All": "2.0.5",
           "Microsoft.NETCore.App": "2.0.0",
-          "MySql.Data": "6.10.5"
+          "MySql.Data": "6.10.5",
+          "Twilio": "5.9.8"
         },
         "runtime": {
           "SPECS_Web_Server.dll": {}
@@ -3867,6 +3868,22 @@
           "System.Xml.XPath": "4.3.0"
         }
       },
+      "Twilio/5.9.8": {
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "1.1.4",
+          "Microsoft.IdentityModel.Tokens": "5.1.4",
+          "NETStandard.Library": "2.0.0",
+          "Newtonsoft.Json": "10.0.1",
+          "System.Collections.Specialized": "4.3.0",
+          "System.IdentityModel.Tokens.Jwt": "5.1.4"
+        },
+        "runtime": {
+          "lib/netstandard1.4/Twilio.dll": {}
+        },
+        "compile": {
+          "lib/netstandard1.4/Twilio.dll": {}
+        }
+      },
       "WindowsAzure.Storage/8.1.4": {
         "dependencies": {
           "Microsoft.Data.OData": "5.8.2",
@@ -6108,6 +6125,13 @@
       "sha512": "sha512-jw9oHHEIVW53mHY9PgrQa98Xo2IZ0ZjrpdOTmtvk+Rvg4tq7dydmxdNqUvJ5YwjDqhn75mBXWttWjiKhWP53LQ==",
       "path": "system.xml.xpath.xdocument/4.3.0",
       "hashPath": "system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
+    },
+    "Twilio/5.9.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-q+yA4F6ru+nqf7on+2QhNtd8qQt05asIV733pV2AhPLdAVttsIiWc6nu7Poe0IsFSmk6MXC4ZRFhE96OIzybhw==",
+      "path": "twilio/5.9.8",
+      "hashPath": "twilio.5.9.8.nupkg.sha512"
     },
     "WindowsAzure.Storage/8.1.4": {
       "type": "package",

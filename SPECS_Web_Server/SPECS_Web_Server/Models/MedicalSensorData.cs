@@ -8,7 +8,7 @@ namespace SPECS_Web_Server.Models
     {
         [JsonIgnore]
 
-        public int userID { get; set; }
+        public long userID { get; set; }
 
         public float SpO2 { get; set; }
 
