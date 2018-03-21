@@ -50,6 +50,84 @@ namespace SPECS_Web_Server.Data
             return list;
         }
 
+        ///<summary>
+        /// Retrieve a family's info based on it's ID
+        ///</summary>
+
+        public Family GetFamily(long familyID){
+            if (familyID  <= 0) return null;
+
+            Family family = new Family();
+            family.Members = new List<User>();
+            family.ID = familyID;
+
+            //Get Family Name
+            string cmdString = "SELECT * FROM family WHERE id = '" + familyID + "';";
+            MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader()){
+                try {
+                    while (reader.Read()){
+                        family.Name = reader.GetString("name");
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+
+            //Get Family users
+            cmdString = "SELECT u.* FROM families f JOIN user u ON f.userid = u.userid WHERE f.familyid = '" + familyID + "' GROUP BY u.userid;";
+            cmd = new MySqlCommand(cmdString, Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader()){
+                try {
+                    while (reader.Read()){
+                        family.Members.Add(new User()
+                        {
+                            ID = reader.GetInt64("userid"),
+                            FirstName = reader.GetString("firstname"),
+                            LastName = reader.GetString("lastname"),
+                            Username = reader.GetString("username"),
+                            Phone = reader.GetInt64("phone"),
+                            Email = reader.GetString("email"),
+                            Address = reader.GetString("address1")
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            
+            return family;
+        }
+
+        ///<summary>
+        /// Retrieve the ID for a family based on a user's ID
+        ///</summary>
+        public long GetFamilyIDFromUser(long userID){
+            if(userID <= 0) return -1;
+
+            long familyID = 0;
+
+            Family family = new Family();
+            string cmdString = "SELECT familyid FROM families WHERE userid = '" + userID + "';";
+            MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader()){
+                try {
+                    while (reader.Read()){
+                        familyID = reader.GetInt64("familyid");
+                    }
+                }
+                catch (Exception e){
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            return familyID;
+
+        }
+
         /// <summary>
         /// Retrieve a single user, TODO: Make ASYNC?
         /// </summary>

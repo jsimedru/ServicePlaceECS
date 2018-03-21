@@ -20,9 +20,6 @@ namespace SPECS_Web_Server.Models
         public long ID { get; set; }
 
         public string Username { get; set; }
-
-        //BAD -- FIX
-        public string Password { get; set; }
      
         public string Email { get; set; }
 

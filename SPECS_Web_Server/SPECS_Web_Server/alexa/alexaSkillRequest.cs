@@ -14,6 +14,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 using System.Threading.Tasks;
+using SPECS_Web_Server.Models;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -78,18 +79,30 @@ namespace SPECS_Web_Server.Controllers
         //TODO: Further develop Emergency Contact system & propery retrieve emergency contacts and contact first one on the list.
         private async void safetyAlert(Models.User user){
             TwilioClient.Init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-            try {
-                //Send Message through Twilio API
-                var message = await MessageResource.CreateAsync(
-                    to: new PhoneNumber(user.Phone.ToString()),
-                    from: new PhoneNumber("+16147675740"),
-                    body: user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
 
-                Console.WriteLine(message.Sid);
+            Family family;
+            using (var db = new AppDb())
+            {
+                await db.Connection.OpenAsync();
+                var query = new UserQuery(db);
+                long familyID = query.GetFamilyIDFromUser(user.ID);
+                family = query.GetFamily(familyID);
+            }
 
-            } catch (Exception e){
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e);
+            for(int i = 0; i < family.Members.Count; i++){
+                try {
+                    //Send Message through Twilio API
+                    var message = await MessageResource.CreateAsync(
+                        to: new PhoneNumber(family.Members.ElementAt(i).Phone.ToString()),
+                        from: new PhoneNumber("+16147675740"),
+                        body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
+
+                    Console.WriteLine(message.Sid);
+
+                } catch (Exception e){
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e);
+                }
             }
         }
     }
