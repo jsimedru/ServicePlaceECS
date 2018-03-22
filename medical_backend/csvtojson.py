@@ -5,10 +5,13 @@ import csv
 import json
 import pandas as pd
 import numpy as np
+from pprint import pprint
+import requests
 
-
+#important import: curl -OL https://github.com/requests/requests/tarball/master
 #Get Command Line Arguments
 #format on CLI: python csv-json.py -i users.csv -o users.json -f dump
+url='http://'
 def main(argv):
     #don't forget to change path in CLI, but these are default paths
     sample1 = '/Users/RachelDedinsky/Desktop/senior/capstone 1/project/SPElderCare/medical_backend/log.csv'
@@ -46,6 +49,8 @@ def main(argv):
     #create with a default value of 0. Note, this stores the averages of the input file. This version of
     #the file is stored on the server.
     df = pd.read_csv(sample2)
+    userID=1
+    health=bool(1)
     if 'ECG' in df:
         df1=df['ECG'].mean()
     else:
@@ -66,8 +71,22 @@ def main(argv):
         df5=df['BloodPressure'].mean()
     else:
         df5=0
-    series=[df1,df2,df3,df4,df5]
-    header=["ECG","SpO2","Respiration","Pulse","BloodPressure"]
+
+    if df1!=0 and (df1>100 or df1<60):
+        health=bool(0)
+    elif df2!=0 and (df2<94):#if less that 94 percent
+        health=bool(0)
+    elif df3!=0 and (df3<12 or df3>25):
+        health=bool(0)
+    elif df4!=0 and (df4<40 and df4>100):
+        health=bool(0)
+    elif df5!=0 and (df5<1):
+        health=bool(0)
+    else:
+        health=bool(1)
+
+    series=[userID,df1,df2,df3,df4,df5,health]
+    header=["UserID","ECG","SpO2","Respiration","Pulse","BloodPressure","health"]
 
     #write the averaged format to the input file
     with open(input_file,'w+') as f1:
@@ -75,6 +94,11 @@ def main(argv):
         writer.writerows([header])
         writer.writerows([series])
     read_csv(input_file, output_file, format)
+    data = json.load(open(output_file))
+    pprint(data)
+    headers = {'Content-type': 'multipart/form-data'}
+    r = requests.post(url, data=data, headers=headers)
+#print (r.text)
 
 #Read CSV File
 def read_csv(file, json_file, format):
@@ -96,3 +120,5 @@ def write_json(data, json_file, format):
 
 if __name__ == "__main__":
    main(sys.argv[1:])
+
+
