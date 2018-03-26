@@ -13,10 +13,12 @@ using System.Threading.Tasks;
 using Alexa.NET.Request;
 using Alexa.NET.Security;
 using Alexa.NET.Response;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SPECS_Web_Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class AlexaRequestController : Controller
     {
         //POST api/alexarequest
@@ -29,6 +31,12 @@ namespace SPECS_Web_Server.Controllers
             //FIX
             return new OkObjectResult(response);
             
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return Ok();
         }
     }
     

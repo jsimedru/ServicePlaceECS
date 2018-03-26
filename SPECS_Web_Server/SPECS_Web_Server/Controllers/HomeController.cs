@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SPECS_Web_Server.Data;
 using SPECS_Web_Server.Models;
@@ -10,13 +11,16 @@ using SPECS_Web_Server.ViewModels;
 
 namespace SPECS_Web_Server.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
+        
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
