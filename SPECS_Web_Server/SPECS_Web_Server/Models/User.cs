@@ -17,7 +17,7 @@ namespace SPECS_Web_Server.Models
         [JsonIgnore]
         public AppDb Db { get; set; }
 
-        public int ID { get; set; }
+        public long ID { get; set; }
 
         public string Username { get; set; }
 

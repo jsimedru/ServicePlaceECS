@@ -19,18 +19,6 @@ namespace SPECS_Web_Server.Controllers
     [Route("api/[controller]")]
     public class AlexaRequestController : Controller
     {
-        [HttpGet]
-        public async Task<IActionResult> GetLatest()
-        {
-            using (var db = new AppDb())
-            {
-                await db.Connection.OpenAsync();
-                var query = new UserQuery(db);
-                List<Models.User> result = query.GetAllUsers();
-                return new OkObjectResult(result);
-            }
-        }
-
         //POST api/alexarequest
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]SkillRequest body)

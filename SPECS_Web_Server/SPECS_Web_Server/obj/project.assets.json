@@ -4890,6 +4890,23 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
+      "Twilio/5.9.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.IdentityModel.Logging": "1.1.2",
+          "Microsoft.IdentityModel.Tokens": "5.1.2",
+          "NETStandard.Library": "1.6.1",
+          "Newtonsoft.Json": "9.0.1",
+          "System.Collections.Specialized": "4.3.0",
+          "System.IdentityModel.Tokens.Jwt": "5.1.2"
+        },
+        "compile": {
+          "lib/netstandard1.4/Twilio.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.4/Twilio.dll": {}
+        }
+      },
       "WindowsAzure.Storage/8.1.4": {
         "type": "package",
         "dependencies": {
@@ -29374,6 +29391,21 @@
         "system.xml.xpath.xdocument.nuspec"
       ]
     },
+    "Twilio/5.9.8": {
+      "sha512": "q+yA4F6ru+nqf7on+2QhNtd8qQt05asIV733pV2AhPLdAVttsIiWc6nu7Poe0IsFSmk6MXC4ZRFhE96OIzybhw==",
+      "type": "package",
+      "path": "twilio/5.9.8",
+      "files": [
+        "lib/net35/Twilio.dll",
+        "lib/net35/Twilio.xml",
+        "lib/net451/Twilio.dll",
+        "lib/net451/Twilio.xml",
+        "lib/netstandard1.4/Twilio.dll",
+        "lib/netstandard1.4/Twilio.xml",
+        "twilio.5.9.8.nupkg.sha512",
+        "twilio.nuspec"
+      ]
+    },
     "WindowsAzure.Storage/8.1.4": {
       "sha512": "W6ZZ0/o7+3Qb77mRAQyLjPudHG3OMeeQ4p9yY13PUdJArmRCx2cLMm5F4tpIjJXxzHC0ew0oK7DMDGILMdfCnw==",
       "type": "package",
@@ -29403,7 +29435,8 @@
       "Alexa.NET.Security.Middleware >= 1.0.0",
       "Microsoft.AspNetCore.All >= 2.0.5",
       "Microsoft.NETCore.App >= 2.0.0",
-      "MySql.Data >= 6.10.5"
+      "MySql.Data >= 6.10.5",
+      "Twilio >= 5.9.8"
     ]
   },
   "packageFolders": {
@@ -29485,6 +29518,7 @@
           "MySql.Data": {
             "target": "Package",
             "version": "[6.10.5, )"
+<<<<<<< HEAD
 =======
           "Microsoft.NETCore.App": {
             "suppressParent": "All",
@@ -29508,6 +29542,12 @@
             "target": "Package",
             "version": "6.10.5"
 >>>>>>> 01ee0a90963009676056d4384bf087f7803f447b
+=======
+          },
+          "Twilio": {
+            "target": "Package",
+            "version": "[5.9.8, )"
+>>>>>>> 712327e3e2453f47563feeedcc30a788b14ce3fb
           }
         },
         "imports": [

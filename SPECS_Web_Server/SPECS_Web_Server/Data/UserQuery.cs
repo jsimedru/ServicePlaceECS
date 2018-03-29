@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using SPECS_Web_Server.Models;
@@ -16,38 +17,68 @@ namespace SPECS_Web_Server.Data
         public UserQuery(AppDb db) => Db = db;
 
         /// <summary>
-        /// Retrieve all users, TODO: Make ASYNC
+        /// Retrieve all users, TODO: Make ASYNC?
         /// </summary>
         public List<User> GetAllUsers()
         {
             List<User> list = new List<User>();
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM user_data", Db.Connection);
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM user", Db.Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
-                try{
-                    while (reader.Read()) {
+                try
+                {
+                    while (reader.Read())
+                    {
                         list.Add(new User()
                         {
-                            ID = reader.GetInt32("id"),
+                            ID = reader.GetInt64("userid"),
                             FirstName = reader.GetString("firstname"),
                             LastName = reader.GetString("lastname"),
                             Username = reader.GetString("username"),
-                            Password = reader.GetString("password"),
                             Phone = reader.GetInt32("phone"),
                             Email = reader.GetString("email"),
                             Address = reader.GetString("address1")
                         });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Retrieve a single user, TODO: Make ASYNC?
+        /// </summary>
+        public User GetUser(string email)
+        {
+            User user = new User();
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM user WHERE email='" + email + "';", Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                try{
+                    while (reader.Read()) {
+                        user.ID = reader.GetInt64("userid");
+                        user.FirstName = reader.GetString("firstname");
+                        user.LastName = reader.GetString("lastname");
+                        user.Username = reader.GetString("username");
+                        user.Phone = reader.GetInt64("phone");
+                        user.Email = reader.GetString("email");
+                        user.Address = reader.GetString("address1");
                     }
                 } catch(Exception e){
                     Console.WriteLine(e.ToString());
                 } 
                 
             }
-            return list;
+            return user;
         }
 
         /// <summary>
-        /// Registers a user, TODO: Test implementation, do we need to open & close connection here??
+        /// Registers a user, TODO: CHECK FOR EXISTING USER, Test implementation, do we need to open & close connection here??
         /// </summary>
         public async Task<bool> RegisterUserAsync(User user, String pwd)
             {
@@ -76,7 +107,7 @@ namespace SPECS_Web_Server.Data
         {
             User user;
             //Re-implement using relational table to get user alexa_id
-            string cmdString = "SELECT * FROM user WHERE id_alexa='" + alexaID + "';";
+            string cmdString = "SELECT user.* FROM user INNER JOIN auth WHERE auth.userid = user.userid AND alexaid='" + alexaID + "';";
             MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
             using (MySqlDataReader reader = cmd.ExecuteReader())
             {
@@ -84,11 +115,12 @@ namespace SPECS_Web_Server.Data
                 {
                     user = new User()
                     {
-                        ID = reader.GetInt32("id"),
+                        ID = reader.GetInt64("userid"),
                         FirstName = reader.GetString("firstname"),
                         LastName = reader.GetString("lastname"),
                         Username = reader.GetString("username"),
-                        Email = reader.GetString("email")
+                        Email = reader.GetString("email"),
+                        Phone = reader.GetInt64("phone")
                     };
                     return user;
                 }
@@ -151,6 +183,19 @@ namespace SPECS_Web_Server.Data
         }
 
         ///<summary>
+        ///Hashes password with a given salt
+        ///</summary>
+        private string hashpwd(String pwd, byte[] salt){
+            string hash = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: pwd,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+            return hash;
+        }
+
+        ///<summary>
         ///Verify existing user's password, TODO: Implement
         ///</summary>
         public bool verifyUserPassword(string pwd, User user) => throw new NotImplementedException();
@@ -158,6 +203,82 @@ namespace SPECS_Web_Server.Data
         ///<summary>
         ///Verify existing user's password, TODO: Implement
         ///</summary>
-        public bool verifyUserPassword(string pwd, string email) => throw new NotImplementedException();
+        public bool verifyUserPassword(string pwd, string userID) {
+            string cmdString = "SELECT * FROM auth WHERE userid='" + userID + "';";
+            MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+
+            bool pwdMatch = false;
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                        string pwdhash = reader.GetString("phash");
+                        string pwdsaltString = reader.GetString("psalt");
+
+                        byte[] pwdsalt = Encoding.ASCII.GetBytes(pwdsaltString);
+
+                        var pwdEntered = hashpwd(pwd, pwdsalt);
+                        if(pwdEntered == pwdhash){
+                            pwdMatch = true;
+                        }
+                }
+            }
+            return pwdMatch;
+        }
+
+        ///<summary>
+        ///Save a user's medical data
+        ///</summary>
+        public async Task<bool> saveMedicalDataAsync(MedicalSensorData data){
+            if(data.userID == 0){
+                return false;
+            }
+             try
+                {   
+                    //Insert Medical Data into skill_health Table
+                    string cmdString = "INSERT INTO skill_health (bp, ecg, spo2, pulse, userid) VALUES ('" + data.BloodPressure + "', '" + data.ECG + "', '" + data.SpO2 + "', '" + data.Pulse + "," + data.userID + "');";
+                    MySqlCommand cmd = new MySqlCommand(cmdString, Db.Connection);
+                    await cmd.ExecuteNonQueryAsync();
+                    long insertedUserID = cmd.LastInsertedId;
+
+                    return true;
+                } catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                    return false;
+                }
+        }
+
+        ///<summary>
+        ///Get a list of user's medical data
+        ///</summary>
+        public List<MedicalSensorData> GetUserMedicalData(int userID)
+        {
+            List<MedicalSensorData> list = new List<MedicalSensorData>();
+            MySqlCommand cmd = new MySqlCommand("SELECT * FROM skill_health WHERE userid = " + userID + ";", Db.Connection);
+            using (MySqlDataReader reader = cmd.ExecuteReader())
+            {
+                try
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new MedicalSensorData()
+                        {
+                            userID = reader.GetInt64("userid"),
+                            BloodPressure = reader.GetString("bp"),
+                            ECG = reader.GetFloat("ecg"),
+                            SpO2 = reader.GetFloat("spo2"),
+                            Pulse = reader.GetInt32("pulse")
+
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+            }
+            return list;
+        }
     }
 }
