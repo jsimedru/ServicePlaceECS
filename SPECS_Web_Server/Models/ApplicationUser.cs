@@ -16,8 +16,8 @@ namespace SPECS_Web_Server.Models
         public String City { get; set; }
         public String Country { get; set; }
         public String AlexaID { get; set; }
-        public Family family { get; set; }
-        public ICollection<AlexaSession> alexaSessionData { get; set; }
-        public ICollection<MedicalSensorData> MedicalSensorData { get; set; }
+        public List<AlexaSession> alexaSessionData { get; set; }
+        public List<MedicalSensorData> MedicalSensorData { get; set; }
+        public Family Family { get; set; }
     }
 }

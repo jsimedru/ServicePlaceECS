@@ -14,18 +14,27 @@ using Alexa.NET.Request;
 using Alexa.NET.Security;
 using Alexa.NET.Response;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace SPECS_Web_Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
+    
     public class AlexaRequestController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        
+        public AlexaRequestController(ApplicationDbContext context, UserManager<ApplicationUser> userManager){
+            _context = context;
+            _userManager = userManager;
+        }
+
         //POST api/alexarequest
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]SkillRequest body)
         {
-            AlexaSkillRequest request = new AlexaSkillRequest(body);
+            AlexaSkillRequest request = new AlexaSkillRequest(_context, _userManager, body);
             SkillResponse response = request.ProcessRequest(body);
             //Return built response from alexa/alexaSkills
             //FIX

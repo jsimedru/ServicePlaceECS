@@ -6,9 +6,9 @@ namespace SPECS_Web_Server.Models
 {
     public class MedicalSensorData
     {
-        [JsonIgnore]
-
         public long ID { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
 
         public float SpO2 { get; set; }
 

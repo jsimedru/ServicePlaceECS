@@ -11,6 +11,8 @@ namespace SPECS_Web_Server.Models
     {
         public int ID { get; set; }
 
+        public ApplicationUser ApplicationUser { get; set; }
+
         [JsonProperty("type")]
         public string Type { get; set; }
 
@@ -39,6 +41,6 @@ namespace SPECS_Web_Server.Models
         [JsonProperty("deviceId")]
         public string DeviceID { get; set; }
         
-        
+        public string FulfillmentStatus { get; set; }
     }
 }

@@ -10,6 +10,10 @@ namespace SPECS_Web_Server.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public DbSet<ApplicationUser> Members { get; set; }
+        public DbSet<DevicePermission> Devices { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
