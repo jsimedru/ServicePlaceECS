@@ -33,9 +33,6 @@ namespace SPECS_Web_Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddDbContext<SPECSDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
-            
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

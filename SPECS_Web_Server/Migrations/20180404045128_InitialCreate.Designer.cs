@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SPECS_Web_Server.Data;
 using System;
 
-namespace SPECS_Web_Server.Data.Migrations
+namespace SPECS_Web_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180404045128_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,6 +143,8 @@ namespace SPECS_Web_Server.Data.Migrations
 
                     b.Property<string>("DeviceID");
 
+                    b.Property<string>("FulfillmentStatus");
+
                     b.Property<string>("Locale");
 
                     b.Property<string>("RequestId");
@@ -186,6 +189,8 @@ namespace SPECS_Web_Server.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<int?>("FamilyID");
+
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
@@ -213,11 +218,11 @@ namespace SPECS_Web_Server.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
-                    b.Property<int?>("familyID");
-
                     b.HasKey("Id");
 
                     b.HasIndex("DevicePermissionID");
+
+                    b.HasIndex("FamilyID");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -225,8 +230,6 @@ namespace SPECS_Web_Server.Data.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasName("UserNameIndex");
-
-                    b.HasIndex("familyID");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -252,7 +255,7 @@ namespace SPECS_Web_Server.Data.Migrations
 
                     b.HasIndex("deviceOwnerId");
 
-                    b.ToTable("DevicePermission");
+                    b.ToTable("Devices");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.Family", b =>
@@ -260,7 +263,7 @@ namespace SPECS_Web_Server.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("name");
+                    b.Property<string>("Name");
 
                     b.HasKey("ID");
 
@@ -338,7 +341,7 @@ namespace SPECS_Web_Server.Data.Migrations
 
             modelBuilder.Entity("SPECS_Web_Server.Models.AlexaSession", b =>
                 {
-                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser")
+                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("alexaSessionData")
                         .HasForeignKey("ApplicationUserId");
                 });
@@ -349,15 +352,15 @@ namespace SPECS_Web_Server.Data.Migrations
                         .WithMany("grantedTo")
                         .HasForeignKey("DevicePermissionID");
 
-                    b.HasOne("SPECS_Web_Server.Models.Family", "family")
-                        .WithMany("members")
-                        .HasForeignKey("familyID");
+                    b.HasOne("SPECS_Web_Server.Models.Family", "Family")
+                        .WithMany("Members")
+                        .HasForeignKey("FamilyID");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.DevicePermission", b =>
                 {
                     b.HasOne("SPECS_Web_Server.Models.Family")
-                        .WithMany("devicePermissions")
+                        .WithMany("DevicePermissions")
                         .HasForeignKey("FamilyID");
 
                     b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "deviceOwner")
@@ -367,7 +370,7 @@ namespace SPECS_Web_Server.Data.Migrations
 
             modelBuilder.Entity("SPECS_Web_Server.Models.MedicalSensorData", b =>
                 {
-                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser")
+                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("MedicalSensorData")
                         .HasForeignKey("ApplicationUserId");
                 });

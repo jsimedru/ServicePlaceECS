@@ -6,10 +6,10 @@ namespace SPECS_Web_Server.Models
     public class Family
     {
         public int ID { get; set; }
-        public String name { get; set; }
-        public ICollection<DevicePermission> devicePermissions { get; set; }
+        public String Name { get; set; }
+        public List<DevicePermission> DevicePermissions { get; set; }
 
-        public ICollection<ApplicationUser> members { get; set; }
+        public List<ApplicationUser> Members { get; set; }
         
     }
 }

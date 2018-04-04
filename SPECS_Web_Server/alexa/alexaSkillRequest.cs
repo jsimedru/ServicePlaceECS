@@ -15,6 +15,7 @@ using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 using System.Threading.Tasks;
 using SPECS_Web_Server.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -29,9 +30,14 @@ namespace SPECS_Web_Server.Controllers
         private const string TWILIO_AUTH_TOKEN = "1b11a32283f190d5b66c3ec11e09ba34";
         private SkillRequest intentRequest;
 
-        public AlexaSkillRequest(SkillRequest _intentRequest)
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public AlexaSkillRequest(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SkillRequest _intentRequest)
         {
             intentRequest = _intentRequest;
+            _context = context;
+            _userManager = userManager;
         }
 
         //TODO: Use Alexa.NET.Middleware to verify requests come from Amazon
@@ -43,16 +49,26 @@ namespace SPECS_Web_Server.Controllers
             var response = new SkillResponse();
 
             //Get User which triggered request
-            using (var context = new SPECSDbContext())
-            {
-                var queryResult = context.Members
-                            .Where(b => b.AlexaID == _skillRequest.Session.User.UserId);
+            //var queryResult = _userManager.Users
+              //  .Single(b => b.AlexaID == _skillRequest.Session.User.UserId);
+              var queryResult = _userManager.Users;
 
-                result = queryResult.ElementAt(0);
-            }
-
+            result = queryResult.Single(b => b.AlexaID == _skillRequest.Session.User.UserId);
+            
             if (result != null)
             {
+                //Store Alexa Intent History
+                AlexaSession newSession = new AlexaSession(){
+                    Type = _skillRequest.Request.Type,
+                    RequestId = _skillRequest.Request.RequestId,
+                    Locale = _skillRequest.Request.Locale,
+                    Timestamp = _skillRequest.Request.Timestamp,
+                    ApiAccessToken = _skillRequest.Context.System.ApiAccessToken,
+                    ApiEndpoint = _skillRequest.Context.System.ApiEndpoint,
+                    UserId = _skillRequest.Session.User.UserId,
+                    AccessToken = _skillRequest.Context.System.Device.DeviceID
+                };
+
                 switch (intentRequest.Intent.Name){
                     case "sendalert":
                         safetyAlert(result);
@@ -60,14 +76,21 @@ namespace SPECS_Web_Server.Controllers
                         var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
                         response = ResponseBuilder.Tell(safetyResponse);
+                        newSession.FulfillmentStatus = "Fulfilled";
                         break;
 
                     default:
                         var defaultResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         defaultResponse.Ssml = "<speak>An error occured, please try again.</speak>";
                         response = ResponseBuilder.Tell(defaultResponse);
+                        newSession.FulfillmentStatus = "Unfulfilled";
                         break;
                 }
+                if(result.alexaSessionData == null){
+                    result.alexaSessionData = new List<AlexaSession>();
+                }
+                result.alexaSessionData.Add(newSession);
+                _context.SaveChanges();
             }
             else
             {
@@ -81,21 +104,22 @@ namespace SPECS_Web_Server.Controllers
         private async void safetyAlert(ApplicationUser user){
             TwilioClient.Init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-            Family family = user.family;
-            
-            for(int i = 0; i < family.members.Count; i++){
-                try {
-                    //Send Message through Twilio API
-                    var message = await MessageResource.CreateAsync(
-                        to: new PhoneNumber(family.members.ElementAt(i).PhoneNumber.ToString()),
-                        from: new PhoneNumber("+16147675740"),
-                        body: "Hello, " + family.members.ElementAt(i).FirstName + ". " + user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
+            Family family = user.Family;
+            if(family != null){
+                for(int i = 0; i < family.Members.Count; i++){
+                    try {
+                        //Send Message through Twilio API
+                        var message = await MessageResource.CreateAsync(
+                            to: new PhoneNumber(family.Members.ElementAt(i).PhoneNumber.ToString()),
+                            from: new PhoneNumber("+16147675740"),
+                            body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
 
-                    Console.WriteLine(message.Sid);
+                        Console.WriteLine(message.Sid);
 
-                } catch (Exception e){
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e);
+                    } catch (Exception e){
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine(e);
+                    }
                 }
             }
         }
