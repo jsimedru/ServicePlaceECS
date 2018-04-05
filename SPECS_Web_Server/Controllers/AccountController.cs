@@ -23,7 +23,7 @@ namespace SPECS_Web_Server.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
+        private readonly ILogger _logger; 
 
         public AccountController(
             UserManager<ApplicationUser> userManager,

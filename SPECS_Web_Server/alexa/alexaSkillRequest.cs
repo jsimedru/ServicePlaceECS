@@ -66,7 +66,7 @@ namespace SPECS_Web_Server.Controllers
                     ApiAccessToken = _skillRequest.Context.System.ApiAccessToken,
                     ApiEndpoint = _skillRequest.Context.System.ApiEndpoint,
                     UserId = _skillRequest.Session.User.UserId,
-                    AccessToken = _skillRequest.Context.System.Device.DeviceID
+                    DeviceID = _skillRequest.Context.System.Device.DeviceID
                 };
 
                 switch (intentRequest.Intent.Name){
@@ -86,10 +86,10 @@ namespace SPECS_Web_Server.Controllers
                         newSession.FulfillmentStatus = "Unfulfilled";
                         break;
                 }
-                if(result.alexaSessionData == null){
-                    result.alexaSessionData = new List<AlexaSession>();
+                if(result.AlexaSessions == null){
+                    result.AlexaSessions = new List<AlexaSession>();
                 }
-                result.alexaSessionData.Add(newSession);
+                result.AlexaSessions.Add(newSession);
                 _context.SaveChanges();
             }
             else
