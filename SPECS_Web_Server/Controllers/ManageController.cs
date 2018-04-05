@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SPECS_Web_Server.Data;
 using SPECS_Web_Server.Models;
 using SPECS_Web_Server.Models.ManageViewModels;
 using SPECS_Web_Server.Services;
@@ -26,6 +28,8 @@ namespace SPECS_Web_Server.Controllers
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
+        private readonly ApplicationDbContext _context;
+
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
 
@@ -34,13 +38,15 @@ namespace SPECS_Web_Server.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _context = context;
         }
 
         [TempData]
@@ -321,6 +327,26 @@ namespace SPECS_Web_Server.Controllers
                 HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
                 Is2faEnabled = user.TwoFactorEnabled,
                 RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Fulfillment()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            using (var context = _context){
+                user = context.Users.Include(ApplicationUser => ApplicationUser.AlexaSessions)
+                    .Single(u => u.Id == user.Id);
+            }
+            var model = new FulfillmentViewModel
+            {
+                AlexaSessions = user.AlexaSessions
             };
 
             return View(model);

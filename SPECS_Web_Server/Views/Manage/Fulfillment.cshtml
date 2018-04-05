@@ -1,0 +1,33 @@
+@model FulfillmentViewModel
+@{
+    ViewData["Title"] = "Fulfillment Status";
+    ViewData.AddActivePage(ManageNavPages.Fulfillment);
+}
+
+<center><h3>@ViewData["Title"]</h3></center><br/>
+@if (Model.AlexaSessions?.Count > 0)
+{
+    <h4>Alexa Sessions</h4>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Request Type</th>
+                <th>Request ID</th>
+                <th>Timestamp</th>
+            </tr>
+            @foreach (var session in Model.AlexaSessions)
+            {
+                <tr>
+                    <td>@session.Type</td>
+                    <td>@session.RequestId</td>
+                    <td>@session.Timestamp</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
