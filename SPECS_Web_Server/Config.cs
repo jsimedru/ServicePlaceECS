@@ -58,19 +58,19 @@ namespace SPECS_Web_Server
                 // OpenID Connect hybrid flow and client credentials client (MVC)
                 new Client
                 {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
+                    ClientId = "alexa",
+                    ClientName = "Alexa Client",
                     AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
 
-                    RequireConsent = true,
+                    RequireConsent = false,
 
                     ClientSecrets = 
                     {
                         new Secret("secret".Sha256())
                     },
 
-                    RedirectUris = { "http://localhost:5002/signin-oidc" },
-                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                    RedirectUris = { "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M1B7L7CGN3RVFK" },
+                    PostLogoutRedirectUris = { "https://pitangui.amazon.com/spa/skill/account-linking-status.html?vendorId=M1B7L7CGN3RVFK" },
 
                     AllowedScopes =
                     {
