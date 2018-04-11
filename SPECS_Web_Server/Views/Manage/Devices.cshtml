@@ -1,0 +1,32 @@
+@model DevicesViewModel
+@{
+    ViewData["Title"] = "Your Devices";
+    ViewData.AddActivePage(ManageNavPages.Devices);
+}
+
+<center><h3>@ViewData["Title"]</h3></center><br/>
+
+<a asp-action="AddDevice" class="btn btn-default">Add a device</a>
+
+@if (Model.Devices?.Count > 0)
+{
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Device Name</th>
+                <th>Device ID</th>
+            </tr>
+            @foreach (var device in Model.Devices)
+            {
+                <tr>
+                    <td>@device.DeviceName</td>
+                    <td>@device.DeviceID</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

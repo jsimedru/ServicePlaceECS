@@ -18,6 +18,7 @@ namespace SPECS_Web_Server.Models
         public String AlexaID { get; set; }
         public List<AlexaSession> AlexaSessions { get; set; }
         public List<MedicalSensorData> MedicalSensorData { get; set; }
+        public List<Device> Devices { get; set; }
         public Family Family { get; set; }
     }
 }

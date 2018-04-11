@@ -353,6 +353,40 @@ namespace SPECS_Web_Server.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Devices()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            using (var context = _context){
+                user = context.Users.Include(ApplicationUser => ApplicationUser.Devices)
+                    .Single(u => u.Id == user.Id);
+            }
+            var model = new DevicesViewModel
+            {
+                Devices = user.Devices
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddDevice()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var model = new AddDeviceViewModel();
+            //TODO: GENERATE INITIAL AUTH TOKEN
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
             var user = await _userManager.GetUserAsync(User);

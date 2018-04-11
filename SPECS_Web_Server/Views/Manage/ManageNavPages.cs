@@ -19,6 +19,8 @@ namespace SPECS_Web_Server.Views.Manage
 
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
+        public static string Devices => "Devices";
+
         public static string Fulfillment => "Fulfillment";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
@@ -30,6 +32,8 @@ namespace SPECS_Web_Server.Views.Manage
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
     
         public static string FulfillmentNavClass(ViewContext viewContext) => PageNavClass(viewContext, Fulfillment);
+
+        public static string DevicesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Devices);
 
 
         public static string PageNavClass(ViewContext viewContext, string page)
