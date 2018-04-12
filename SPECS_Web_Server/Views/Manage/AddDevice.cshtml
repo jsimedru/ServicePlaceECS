@@ -1,0 +1,16 @@
+﻿@model AddDeviceViewModel
+@{
+    ViewData["Title"] = "Add a device";
+    ViewData.AddActivePage(ManageNavPages.Devices);
+}
+
+<h1>@ViewData["Title"]</h1>
+<div>
+    <p>To add a device enter the code listed below into the authentication page on the device's setup.</p>
+</div>
+<br/>
+<h2>Your device code is: @Model.newToken</h2>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

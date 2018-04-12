@@ -27,6 +27,7 @@
                 <th>Request Type</th>
                 <th>Request ID</th>
                 <th>Timestamp</th>
+                <th>Status</th>
             </tr>
             @foreach (var session in Model.AlexaSessions)
             {
@@ -34,7 +35,7 @@
                     <td>@session.Type</td>
                     <td>@session.RequestId</td>
                     <td>@session.Timestamp</td>
-
+                    <td>@session.FulfillmentStatus</td>
                 </tr>
             }
         </tbody>

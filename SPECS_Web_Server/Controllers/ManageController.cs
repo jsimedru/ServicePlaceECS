@@ -15,6 +15,7 @@ using SPECS_Web_Server.Data;
 using SPECS_Web_Server.Models;
 using SPECS_Web_Server.Models.ManageViewModels;
 using SPECS_Web_Server.Services;
+using OtpNet;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -350,6 +351,74 @@ namespace SPECS_Web_Server.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Devices()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            using (var context = _context){
+                user = context.Users.Include(ApplicationUser => ApplicationUser.Devices)
+                    .Single(u => u.Id == user.Id);
+            }
+            
+            var model = new DevicesViewModel
+            {
+                Devices = user.Devices
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddDevice()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            using (var context = _context){
+                user = context.Users.Include(ApplicationUser => ApplicationUser.Devices)
+                    .Single(u => u.Id == user.Id);
+            }
+
+            var model = new AddDeviceViewModel();
+
+            //TODO: Redo with TOTP? or better implement HOTP in AddDeviceViewModel
+            var hotp = new Hotp(Encoding.ASCII.GetBytes(user.Email), mode: OtpHashMode.Sha512);
+            model.newToken = hotp.GetHashCode().ToString();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveDevice(Device device)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            
+            using (var context = _context){
+                user = context.Users.Include(ApplicationUser => ApplicationUser.Devices)
+                    .Single(u => u.Id == user.Id);
+
+                if (user.Devices.Contains(device)){
+                user.Devices.Remove(device);
+                }
+
+                context.SaveChanges();
+            }
+
+            _logger.LogInformation("User with ID {UserId} has removed a device.", user.Id);
+            return RedirectToAction(nameof(Devices));
         }
 
         [HttpGet]
