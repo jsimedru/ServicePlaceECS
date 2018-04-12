@@ -3,8 +3,21 @@
     ViewData["Title"] = "Fulfillment Status";
     ViewData.AddActivePage(ManageNavPages.Fulfillment);
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #ffff99;
+        }
+    </style>
+</head>
 
-<center><h3>@ViewData["Title"]</h3></center><br/>
+<body>
+
+</body>
+</html>
+<center><h3>@ViewData["Title"]</h3></center><br />
 @if (Model.AlexaSessions?.Count > 0)
 {
     <h4>Alexa Sessions</h4>
@@ -21,7 +34,7 @@
                     <td>@session.Type</td>
                     <td>@session.RequestId</td>
                     <td>@session.Timestamp</td>
-                    
+
                 </tr>
             }
         </tbody>
