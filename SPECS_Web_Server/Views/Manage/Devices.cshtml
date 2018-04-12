@@ -7,6 +7,7 @@
 <center><h3>@ViewData["Title"]</h3></center><br/>
 
 <a asp-action="AddDevice" class="btn btn-default">Add a device</a>
+<br/><br/>
 
 @if (Model.Devices?.Count > 0)
 {
@@ -15,12 +16,19 @@
             <tr>
                 <th>Device Name</th>
                 <th>Device ID</th>
+                <th></th>
             </tr>
             @foreach (var device in Model.Devices)
             {
                 <tr>
                     <td>@device.DeviceName</td>
                     <td>@device.DeviceID</td>
+                    <td>
+                        <form asp-action="RemoveDevice" method="post" class="form-group">
+                            <input value="@device" type="hidden" />
+                            <button class="btn btn-danger" type="submit">Remove</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
