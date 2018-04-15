@@ -57,8 +57,18 @@ namespace SPECS_Web_Server.Controllers
             
             if (result != null)
             {
+                //Generate fulfillment record
+                Fulfillment fulfillment = new Fulfillment(){
+                    ApplicationUser = result,
+                    DeviceID = _skillRequest.Context.System.Device.DeviceID,
+                    Timestamp = _skillRequest.Request.Timestamp,
+                    Type = FulfillmentType.Alexa,
+
+                };
+
                 //Store Alexa Intent History
                 AlexaSession newSession = new AlexaSession(){
+                    ApplicationUser = result,
                     Type = _skillRequest.Request.Type,
                     RequestId = _skillRequest.Request.RequestId,
                     Locale = _skillRequest.Request.Locale,
@@ -66,7 +76,8 @@ namespace SPECS_Web_Server.Controllers
                     ApiAccessToken = _skillRequest.Context.System.ApiAccessToken,
                     ApiEndpoint = _skillRequest.Context.System.ApiEndpoint,
                     UserId = _skillRequest.Session.User.UserId,
-                    DeviceID = _skillRequest.Context.System.Device.DeviceID
+                    DeviceID = _skillRequest.Context.System.Device.DeviceID,
+                    Fulfillment = fulfillment
                 };
 
                 switch (intentRequest.Intent.Name){
@@ -76,20 +87,23 @@ namespace SPECS_Web_Server.Controllers
                         var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
                         response = ResponseBuilder.Tell(safetyResponse);
-                        newSession.FulfillmentStatus = "Fulfilled";
+                        newSession.Fulfillment.Status = FulfillmentStatus.Fulfilled;
+                        newSession.Fulfillment.Category = FulfillmentCategory.Safety;
                         break;
 
                     default:
                         var defaultResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         defaultResponse.Ssml = "<speak>An error occured, please try again.</speak>";
                         response = ResponseBuilder.Tell(defaultResponse);
-                        newSession.FulfillmentStatus = "Unfulfilled";
+                        newSession.Fulfillment.Status = FulfillmentStatus.Unfulfilled;
                         break;
                 }
-                if(result.AlexaSessions == null){
-                    result.AlexaSessions = new List<AlexaSession>();
-                }
+
+                _context.Update(result);
                 result.AlexaSessions.Add(newSession);
+                result.Fulfillments.Add(fulfillment);
+                //_userManager.UpdateAsync(result);
+               
                 _context.SaveChanges();
             }
             else

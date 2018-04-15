@@ -8,7 +8,7 @@ namespace SPECS_Web_Server.Models.ManageViewModels
 {
     public class FulfillmentViewModel
     {
-        public List<AlexaSession> AlexaSessions { get; set; }
+        public List<Fulfillment> Fulfillments { get; set; }
 
     }
 }

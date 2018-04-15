@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SPECS_Web_Server.Migrations
 {
-    public partial class identityServer : Migration
+    public partial class UpdateRelationships : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

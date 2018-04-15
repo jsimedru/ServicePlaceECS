@@ -24,7 +24,7 @@ namespace SPECS_Web_Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Family",
+                name: "Families",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -33,7 +33,7 @@ namespace SPECS_Web_Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Family", x => x.ID);
+                    table.PrimaryKey("PK_Families", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -76,7 +76,7 @@ namespace SPECS_Web_Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AlexaSession",
+                name: "AlexaSessions",
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
@@ -86,7 +86,7 @@ namespace SPECS_Web_Server.Migrations
                     ApiEndpoint = table.Column<string>(nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true),
                     DeviceID = table.Column<string>(nullable: true),
-                    FulfillmentStatus = table.Column<string>(nullable: true),
+                    FulfillmentID = table.Column<int>(nullable: true),
                     Locale = table.Column<string>(nullable: true),
                     RequestId = table.Column<string>(nullable: true),
                     Timestamp = table.Column<DateTime>(nullable: false),
@@ -95,7 +95,7 @@ namespace SPECS_Web_Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlexaSession", x => x.ID);
+                    table.PrimaryKey("PK_AlexaSessions", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,6 +142,22 @@ namespace SPECS_Web_Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Device",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DeviceID = table.Column<string>(nullable: true),
+                    DeviceName = table.Column<string>(nullable: true),
+                    DeviceOwnerId = table.Column<string>(nullable: true),
+                    DevicePermissionsID = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Device", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Devices",
                 columns: table => new
                 {
@@ -157,9 +173,9 @@ namespace SPECS_Web_Server.Migrations
                 {
                     table.PrimaryKey("PK_Devices", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Devices_Family_FamilyID",
+                        name: "FK_Devices_Families_FamilyID",
                         column: x => x.FamilyID,
-                        principalTable: "Family",
+                        principalTable: "Families",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -184,11 +200,13 @@ namespace SPECS_Web_Server.Migrations
                     LastName = table.Column<string>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    MedicalConditions = table.Column<string>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    PreferredDoctor = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true)
@@ -203,10 +221,35 @@ namespace SPECS_Web_Server.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_Family_FamilyID",
+                        name: "FK_AspNetUsers_Families_FamilyID",
                         column: x => x.FamilyID,
-                        principalTable: "Family",
+                        principalTable: "Families",
                         principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fulfillments",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    Category = table.Column<int>(nullable: false),
+                    DeviceID = table.Column<string>(nullable: true),
+                    Note = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    Timestamp = table.Column<DateTime>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fulfillments", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Fulfillments_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -235,9 +278,14 @@ namespace SPECS_Web_Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AlexaSession_ApplicationUserId",
-                table: "AlexaSession",
+                name: "IX_AlexaSessions_ApplicationUserId",
+                table: "AlexaSessions",
                 column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlexaSessions_FulfillmentID",
+                table: "AlexaSessions",
+                column: "FulfillmentID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -287,6 +335,16 @@ namespace SPECS_Web_Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Device_DeviceOwnerId",
+                table: "Device",
+                column: "DeviceOwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Device_DevicePermissionsID",
+                table: "Device",
+                column: "DevicePermissionsID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Devices_FamilyID",
                 table: "Devices",
                 column: "FamilyID");
@@ -295,6 +353,11 @@ namespace SPECS_Web_Server.Migrations
                 name: "IX_Devices_deviceOwnerId",
                 table: "Devices",
                 column: "deviceOwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Fulfillments_ApplicationUserId",
+                table: "Fulfillments",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MedicalSensorData_ApplicationUserId",
@@ -310,11 +373,19 @@ namespace SPECS_Web_Server.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AlexaSession_AspNetUsers_ApplicationUserId",
-                table: "AlexaSession",
+                name: "FK_AlexaSessions_AspNetUsers_ApplicationUserId",
+                table: "AlexaSessions",
                 column: "ApplicationUserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AlexaSessions_Fulfillments_FulfillmentID",
+                table: "AlexaSessions",
+                column: "FulfillmentID",
+                principalTable: "Fulfillments",
+                principalColumn: "ID",
                 onDelete: ReferentialAction.Restrict);
 
             migrationBuilder.AddForeignKey(
@@ -342,6 +413,22 @@ namespace SPECS_Web_Server.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_Device_AspNetUsers_DeviceOwnerId",
+                table: "Device",
+                column: "DeviceOwnerId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Device_Devices_DevicePermissionsID",
+                table: "Device",
+                column: "DevicePermissionsID",
+                principalTable: "Devices",
+                principalColumn: "ID",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Devices_AspNetUsers_deviceOwnerId",
                 table: "Devices",
                 column: "deviceOwnerId",
@@ -357,7 +444,7 @@ namespace SPECS_Web_Server.Migrations
                 table: "Devices");
 
             migrationBuilder.DropTable(
-                name: "AlexaSession");
+                name: "AlexaSessions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -375,7 +462,13 @@ namespace SPECS_Web_Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Device");
+
+            migrationBuilder.DropTable(
                 name: "MedicalSensorData");
+
+            migrationBuilder.DropTable(
+                name: "Fulfillments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -387,7 +480,7 @@ namespace SPECS_Web_Server.Migrations
                 name: "Devices");
 
             migrationBuilder.DropTable(
-                name: "Family");
+                name: "Families");
         }
     }
 }
