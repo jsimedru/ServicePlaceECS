@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,6 +41,71 @@ namespace SPECS_Web_Server.Controllers
 
         [TempData]
         public string ErrorMessage { get; set; }
+
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginImplicitGrant(string state, string client_id, string response_type, string scope, string redirect_uri)
+        {
+            // Clear the existing external cookie to ensure a clean login process
+            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
+            ViewData["state"] = state;
+            ViewData["client_id"] = client_id;
+            ViewData["response_type"] = response_type;
+            ViewData["scope"] = scope;
+            ViewData["ReturnUrl"] = redirect_uri;
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginImplicitGrant(LoginViewModel model, string state, string client_id, string response_type, string scope, string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation("User logged in.");
+                    //Change for proper domain
+                    var request = new RequestUrl("https://0c574e90.ngrok.io/connect/authorize");
+                    var url = request.CreateAuthorizeUrl(
+                        clientId:     "alexa",
+                        scope: scope,
+                        responseType: OidcConstants.ResponseTypes.IdTokenToken,
+                        redirectUri: returnUrl,
+                        state:       state,
+                        nonce:       CryptoRandom.CreateUniqueId());
+
+                    //returnUrl + "#state=" + state + "&access_token=" + "&token_type="
+                    return Redirect(url);
+                }
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
+                }
+                if (result.IsLockedOut)
+                {
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToAction(nameof(Lockout));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return View(model);
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+
+
 
         [HttpGet]
         [AllowAnonymous]

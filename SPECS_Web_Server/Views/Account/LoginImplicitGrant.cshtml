@@ -1,0 +1,110 @@
+@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #ffff99;
+        }
+
+
+        p {
+            font-family: Arial;
+            font-size: 150%;
+            color: #993333;
+            font-weight:;
+        }
+        .Button {
+            background-color: #cc9900;
+            border: none;
+            color: ghostwhite;
+            padding: 16px 32px;
+            text-decoration: none;
+            font-family: lato;
+            font-weight: bold;
+            margin: 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 120%;
+            width: 15%;
+        }
+       .textbox {
+            width: 30%;
+            padding: 1px 20px;
+            box-sizing: border-box;
+            border: 1px;
+            border-radius: 4px;
+            margin: 4px;
+        }
+
+    </style>
+
+</head>
+ <br><center><img src="~/images/serviceplacelogo.png"></center>
+<body>
+    <center>
+        
+        <font color="#bc0d15"><h2>@ViewData["Title"]</h2></font>
+
+
+
+        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+            <input type="hidden" name="state" value="@ViewData["state"]" />
+            <input type="hidden" name="client_id" value="@ViewData["client_id"]" />
+            <input type="hidden" name="response_type" value="@ViewData["response_type"]" />
+            <input type="hidden" name="scope" value="@ViewData["scope"]" />
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="textbox">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="textbox">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label asp-for="RememberMe">
+                        <input asp-for="RememberMe" />
+                        @Html.DisplayNameFor(m => m.RememberMe)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="Button">Log in</button>
+            </div>
+            <div class="form-group">
+                <p>
+                    <a asp-action="ForgotPassword">Forgot your password?</a>
+                </p>
+                <p>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                </p>
+            </div>
+        </form>
+    </center>
+        
+
+
+    @section Scripts {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }
+
+
+</body>
+</html>
