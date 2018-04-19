@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -30,7 +31,7 @@ namespace SPECS_Web_Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]MedicalSensorData body)
         {
-            user = _context.Users.Include(ApplicationUser => ApplicationUser.MedicalSensorData)
+            var user = _context.Users.Include(ApplicationUser => ApplicationUser.MedicalSensorData)
                 .Single(u => u.Email == body.UserEmail);
             if(user != null)
             {

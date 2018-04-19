@@ -25,9 +25,9 @@ namespace SPECS_Web_Server.Models
 
         public List<AlexaSession> AlexaSessions { get; set; }
 
-        public List<MedicalSensorData> MedicalSensorData { get; set; }
+        public virtual ICollection<MedicalSensorData> MedicalSensorData { get; set; }
 
-        public List<Device> Devices { get; set; }
+        public virtual ICollection<Device> Devices { get; set; }
 
         public Family Family { get; set; }
 
@@ -40,6 +40,7 @@ namespace SPECS_Web_Server.Models
         public ApplicationUser(){
             Fulfillments = new List<Fulfillment>();
             AlexaSessions = new List<AlexaSession>();
+            MedicalSensorData = new List<MedicalSensorData>();
         }
     }
 }

@@ -16,6 +16,7 @@ using Twilio.Types;
 using System.Threading.Tasks;
 using SPECS_Web_Server.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace SPECS_Web_Server.Controllers
 {
@@ -43,7 +44,7 @@ namespace SPECS_Web_Server.Controllers
         //TODO: Use Alexa.NET.Middleware to verify requests come from Amazon
         public SkillResponse ProcessRequest(SkillRequest _skillRequest)
         {
-            ApplicationUser result;
+            ApplicationUser user;
             var intentRequest = _skillRequest.Request as IntentRequest;
             var speech = new Alexa.NET.Response.SsmlOutputSpeech();
             var response = new SkillResponse();
@@ -53,13 +54,17 @@ namespace SPECS_Web_Server.Controllers
               //  .Single(b => b.AlexaID == _skillRequest.Session.User.UserId);
               var queryResult = _userManager.Users;
 
-            result = queryResult.Single(b => b.AlexaID == _skillRequest.Session.User.UserId);
+            var queryuser = queryResult.Single(b => b.AlexaID == _skillRequest.Session.User.UserId);
             
-            if (result != null)
+            user = _context.Users.Include(ApplicationUser => ApplicationUser.AlexaSessions)
+                    .Include(ApplicationUser => ApplicationUser.MedicalSensorData)
+                    .Single(u => u.Id == queryuser.Id);
+
+            if (user != null)
             {
                 //Generate fulfillment record
                 Fulfillment fulfillment = new Fulfillment(){
-                    ApplicationUser = result,
+                    ApplicationUser = user,
                     DeviceID = _skillRequest.Context.System.Device.DeviceID,
                     Timestamp = _skillRequest.Request.Timestamp,
                     Source = FulfillmentSource.Alexa,
@@ -69,7 +74,7 @@ namespace SPECS_Web_Server.Controllers
 
                 //Store Alexa Intent History
                 AlexaSession newSession = new AlexaSession(){
-                    ApplicationUser = result,
+                    ApplicationUser = user,
                     Type = _skillRequest.Request.Type,
                     RequestId = _skillRequest.Request.RequestId,
                     Locale = _skillRequest.Request.Locale,
@@ -83,7 +88,7 @@ namespace SPECS_Web_Server.Controllers
 
                 switch (intentRequest.Intent.Name){
                     case "sendalert":
-                        safetyAlert(result);
+                        safetyAlert(user);
                         //Generate Alexa request
                         var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
@@ -94,30 +99,26 @@ namespace SPECS_Web_Server.Controllers
 
                     case "displayMedicalSummaryIntent":
                         var medicalResponse = new Alexa.NET.Response.SsmlOutputSpeech();
-                        MedicalSensorData medicalData = user.MedicalSensorData;
+                        MedicalSensorData medicalData = user.MedicalSensorData.Last();
                         string healthString="";
                         if(medicalData != null){
-                            try {
-                                if(medicalData.healthy==true)
-                                {
-                                    healthString = "You are healthy!"
-                                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
-                                }
-                                else
-                                {
-                                    healthString="You aren't healthy."
-                                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
-                                }
-
-                            } catch (Exception e){
-                                healthString = "error"
+                            if(medicalData.health==true)
+                            {
+                                healthString = "You are healthy!";
                                 medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
                             }
-                        response = ResponseBuilder.Tell(medicalResponse);
-                        //var finalResponse = ResponseBuilder.TellWithCard(medicalResponse, "Health Summary", healthString);
-                        //return finalResponse;
-                        //Generate Alexa request
-                        newSession.FulfillmentStatus = "Fulfilled";
+                            else
+                            {
+                                healthString="You aren't healthy.";
+                                medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                            }
+
+                            response = ResponseBuilder.Tell(medicalResponse);
+                            //var finalResponse = ResponseBuilder.TellWithCard(medicalResponse, "Health Summary", healthString);
+                            //return finalResponse;
+                            //Generate Alexa request
+                            newSession.Fulfillment.Status = FulfillmentStatus.Fulfilled;
+                        }
                         break;
 
                     default:
@@ -128,9 +129,9 @@ namespace SPECS_Web_Server.Controllers
                         break;
                 }
 
-                _context.Update(result);
-                result.AlexaSessions.Add(newSession);
-                result.Fulfillments.Add(fulfillment);
+                _context.Update(user);
+                user.AlexaSessions.Add(newSession);
+                user.Fulfillments.Add(fulfillment);
                 //_userManager.UpdateAsync(result);
                
                 _context.SaveChanges();
@@ -141,13 +142,14 @@ namespace SPECS_Web_Server.Controllers
                 response = ResponseBuilder.Tell(speech);
             }
             return response;
+
         }
 
         //TODO: Further develop Emergency Contact system & propery retrieve emergency contacts and contact first one on the list.
-        private async void safetyAlert(ApplicationUser user){
+        private async void safetyAlert(ApplicationUser appuser){
             TwilioClient.Init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-            Family family = user.Family;
+            Family family = appuser.Family;
             if(family != null){
                 for(int i = 0; i < family.Members.Count; i++){
                     try {
@@ -155,7 +157,7 @@ namespace SPECS_Web_Server.Controllers
                         var message = await MessageResource.CreateAsync(
                             to: new PhoneNumber(family.Members.ElementAt(i).PhoneNumber.ToString()),
                             from: new PhoneNumber("+16147675740"),
-                            body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
+                            body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + appuser.FirstName + " " + appuser.LastName + " has triggered an alert. Please get in contact.");
                         Console.WriteLine(message.Sid);
 
                     } catch (Exception e){

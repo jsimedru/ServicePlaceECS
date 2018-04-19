@@ -381,12 +381,13 @@ namespace SPECS_Web_Server.Controllers
             }
             using (var context = _context){
                 user = context.Users.Include(ApplicationUser => ApplicationUser.Devices)
+                    .Include(ApplicationUser => ApplicationUser.MedicalSensorData)
                     .Single(u => u.Id == user.Id);
             }
             
             var model = new DevicesViewModel
             {
-                Devices = user.Devices
+                Devices = user.Devices.ToList()
             };
 
             return View(model);
