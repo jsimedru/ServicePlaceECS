@@ -19,7 +19,6 @@ using Microsoft.AspNetCore.Identity;
 namespace SPECS_Web_Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class AlexaRequestController : Controller
     {
         private readonly ApplicationDbContext _context;

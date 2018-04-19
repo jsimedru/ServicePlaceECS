@@ -43,9 +43,33 @@
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
                 <div class="form-group">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+                <div class="form-group">
                     <label asp-for="PhoneNumber"></label>
                     <input asp-for="PhoneNumber" class="form-control" />
                     <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address1"></label>
+                    <input asp-for="Address1" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address2"></label>
+                    <input asp-for="Address2" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="MedicalConditions"></label>
+                    <input asp-for="MedicalConditions" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="PreferredDoctor"></label>
+                    <input asp-for="PreferredDoctor" class="form-control" />
                 </div>
                 <button type="submit" class="btn btn-default">Save</button>
             </form>
