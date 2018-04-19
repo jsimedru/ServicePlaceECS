@@ -95,7 +95,7 @@ namespace SPECS_Web_Server.Controllers
                     case "displayMedicalSummaryIntent":
                         var medicalResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         MedicalSensorData medicalData = user.MedicalSensorData;
-                        var healthString="";
+                        string healthString="";
                         if(medicalData != null){
                             try {
                                 if(medicalData.healthy==true)
