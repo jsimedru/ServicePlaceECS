@@ -1,0 +1,48 @@
+@model AdminFulfillmentViewModel
+@{
+    ViewData["Title"] = "All Fulfillments";
+    ViewData.AddActivePage(AdminNavPages.Fulfillments);
+}
+<body>
+    @Html.Partial("_StatusMessage", Model.StatusMessage)
+    <center><h3>@ViewData["Title"]</h3></center><br />
+        @if (Model.Fulfillments?.Count > 0)
+        {
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Requester </th>
+                        <th>Notes</th>
+                        <th>Request Source</th>
+                        <th>Request Type</th>
+                        <th>Request Category</th>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    @foreach (var fulfillment in Model.Fulfillments)
+                    {
+                        <tr>
+                            @if (fulfillment.ApplicationUser != null)
+                            {
+                                <td>@fulfillment.ApplicationUser.FirstName @fulfillment.ApplicationUser.LastName</td>
+                            }
+                            <td>@fulfillment.Note</td>
+                            <td>@fulfillment.Source</td>
+                            <td>@fulfillment.Type</td>
+                            <td>@fulfillment.Category</td>
+                            <td>@fulfillment.Timestamp</td>
+                            <td>@fulfillment.Status</td>
+                            <td><button class="btn" type="submit">Add Note</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>    
+        }
+
+</body>
+</html>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -7,11 +7,9 @@ using Newtonsoft.Json;
 
 namespace SPECS_Web_Server.Models
 {
-    public enum FulfillmentType
-    {
-        Informational,
-        Service,
-        Emergency,
-        Social
+    public enum FulfillmentSource {
+        Alexa,
+        Manual,
+        Phone
     }
 }

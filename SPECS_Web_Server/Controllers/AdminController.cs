@@ -70,5 +70,16 @@ namespace SPECS_Web_Server.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Fulfillments()
+        {
+            var model = new AdminFulfillmentViewModel
+            {
+                Fulfillments = await _context.Fulfillments.Include(u => u.ApplicationUser).ToListAsync()
+            };
+
+            return View(model);
+        }
+
     }
 }

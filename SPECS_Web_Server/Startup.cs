@@ -109,6 +109,7 @@ namespace SPECS_Web_Server
 
             using (IServiceScope scope = scopeFactory.CreateScope()) {
                 //Create Identity Roles
+                //Comment out CreateRoles() when initializing new DB 
                 CreateRoles(scope.ServiceProvider).Wait();
             }
         }

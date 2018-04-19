@@ -24,6 +24,7 @@
     <table class="table">
         <tbody>
             <tr>
+                <th>Request Source</th>
                 <th>Request Type</th>
                 <th>Request Category</th>
                 <th>Timestamp</th>
@@ -33,6 +34,7 @@
             @foreach (var session in Model.Fulfillments)
             {
                 <tr>
+                    <td>@session.Source</td>
                     <td>@session.Type</td>
                     <td>@session.Category</td>
                     <td>@session.Timestamp</td>

@@ -5,22 +5,11 @@
 }
 
 
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        body {
-            background-color: #ffff99;
-        }
-    </style>
-</head>
-
 <body>
     @Html.Partial("_StatusMessage", Model.StatusMessage)
     <center><h3>@ViewData["Title"]</h3></center><br />
         @if (Model.Users?.Count > 0)
         {
-            <h4>Users</h4>
             <table class="table">
                 <tbody>
                     <tr>

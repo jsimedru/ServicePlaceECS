@@ -15,6 +15,8 @@ namespace SPECS_Web_Server.Models
 
         public FulfillmentType Type { get; set; }
 
+        public FulfillmentSource Source { get; set; }
+
         public FulfillmentCategory Category { get; set; }
 
         [JsonConverter(typeof(MixedDateTimeConverter))]

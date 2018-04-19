@@ -62,7 +62,8 @@ namespace SPECS_Web_Server.Controllers
                     ApplicationUser = result,
                     DeviceID = _skillRequest.Context.System.Device.DeviceID,
                     Timestamp = _skillRequest.Request.Timestamp,
-                    Type = FulfillmentType.Alexa,
+                    Source = FulfillmentSource.Alexa,
+                    Type = FulfillmentType.Informational,
 
                 };
 
