@@ -41,6 +41,6 @@ namespace SPECS_Web_Server.Models
         [JsonProperty("deviceId")]
         public string DeviceID { get; set; }
         
-        public string FulfillmentStatus { get; set; }
+        public Fulfillment Fulfillment { get; set; }
     }
 }

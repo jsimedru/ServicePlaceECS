@@ -68,6 +68,12 @@ namespace SPECS_Web_Server.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address1 = user.Address1,
+                Address2 = user.Address2,
+                MedicalConditions = user.MedicalConditions,
+                PreferredDoctor = user.PreferredDoctor,
                 StatusMessage = StatusMessage
             };
 
@@ -108,6 +114,18 @@ namespace SPECS_Web_Server.Controllers
                     throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
                 }
             }
+
+            user.Address1 = model.Address1;
+            user.Address2 = model.Address2;
+            user.MedicalConditions = model.MedicalConditions;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.PreferredDoctor = model.PreferredDoctor;
+            var updateUserMisc = await _userManager.UpdateAsync(user);
+                if (!updateUserMisc.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting Misc Data for user with ID '{user.Id}'.");
+                }
 
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
@@ -342,12 +360,12 @@ namespace SPECS_Web_Server.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
             using (var context = _context){
-                user = context.Users.Include(ApplicationUser => ApplicationUser.AlexaSessions)
+                user = context.Users.Include(ApplicationUser => ApplicationUser.AlexaSessions).Include(ApplicationUser => ApplicationUser.Fulfillments)
                     .Single(u => u.Id == user.Id);
             }
             var model = new FulfillmentViewModel
             {
-                AlexaSessions = user.AlexaSessions
+                Fulfillments = user.Fulfillments.ToList()
             };
 
             return View(model);

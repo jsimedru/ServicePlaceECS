@@ -29,12 +29,12 @@ namespace SPECS_Web_Server.Controllers
 
         //POST api/alexarequest
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]MedicalSensorData body)
+        public IActionResult Post([FromBody]MedicalSensorData body)
         {
             //Get User
             //Save MedicalSensorData entry to user
             return Ok();
-            
+
         }
     }
     

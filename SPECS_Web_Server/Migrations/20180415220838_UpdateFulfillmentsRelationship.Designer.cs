@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using SPECS_Web_Server.Data;
+using SPECS_Web_Server.Models;
 using System;
 
 namespace SPECS_Web_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180404045128_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20180415220838_UpdateFulfillmentsRelationship")]
+    partial class UpdateFulfillmentsRelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,7 +144,7 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<string>("DeviceID");
 
-                    b.Property<string>("FulfillmentStatus");
+                    b.Property<int?>("FulfillmentID");
 
                     b.Property<string>("Locale");
 
@@ -159,7 +160,9 @@ namespace SPECS_Web_Server.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("AlexaSession");
+                    b.HasIndex("FulfillmentID");
+
+                    b.ToTable("AlexaSessions");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.ApplicationUser", b =>
@@ -199,6 +202,8 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
+                    b.Property<string>("MedicalConditions");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
 
@@ -210,6 +215,8 @@ namespace SPECS_Web_Server.Migrations
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("PreferredDoctor");
 
                     b.Property<string>("SecurityStamp");
 
@@ -232,6 +239,28 @@ namespace SPECS_Web_Server.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("SPECS_Web_Server.Models.Device", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DeviceID");
+
+                    b.Property<string>("DeviceName");
+
+                    b.Property<string>("DeviceOwnerId");
+
+                    b.Property<int?>("DevicePermissionsID");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DeviceOwnerId");
+
+                    b.HasIndex("DevicePermissionsID");
+
+                    b.ToTable("Device");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.DevicePermission", b =>
@@ -267,7 +296,33 @@ namespace SPECS_Web_Server.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Family");
+                    b.ToTable("Families");
+                });
+
+            modelBuilder.Entity("SPECS_Web_Server.Models.Fulfillment", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int>("Category");
+
+                    b.Property<string>("DeviceID");
+
+                    b.Property<string>("Note");
+
+                    b.Property<int>("Status");
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Fulfillments");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.MedicalSensorData", b =>
@@ -342,8 +397,12 @@ namespace SPECS_Web_Server.Migrations
             modelBuilder.Entity("SPECS_Web_Server.Models.AlexaSession", b =>
                 {
                     b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("alexaSessionData")
+                        .WithMany("AlexaSessions")
                         .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("SPECS_Web_Server.Models.Fulfillment", "Fulfillment")
+                        .WithMany()
+                        .HasForeignKey("FulfillmentID");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.ApplicationUser", b =>
@@ -357,6 +416,17 @@ namespace SPECS_Web_Server.Migrations
                         .HasForeignKey("FamilyID");
                 });
 
+            modelBuilder.Entity("SPECS_Web_Server.Models.Device", b =>
+                {
+                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "DeviceOwner")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceOwnerId");
+
+                    b.HasOne("SPECS_Web_Server.Models.DevicePermission", "DevicePermissions")
+                        .WithMany()
+                        .HasForeignKey("DevicePermissionsID");
+                });
+
             modelBuilder.Entity("SPECS_Web_Server.Models.DevicePermission", b =>
                 {
                     b.HasOne("SPECS_Web_Server.Models.Family")
@@ -366,6 +436,13 @@ namespace SPECS_Web_Server.Migrations
                     b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "deviceOwner")
                         .WithMany()
                         .HasForeignKey("deviceOwnerId");
+                });
+
+            modelBuilder.Entity("SPECS_Web_Server.Models.Fulfillment", b =>
+                {
+                    b.HasOne("SPECS_Web_Server.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Fulfillments")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("SPECS_Web_Server.Models.MedicalSensorData", b =>

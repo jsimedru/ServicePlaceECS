@@ -15,6 +15,7 @@ namespace SPECS_Web_Server.Data
         public DbSet<Family> Families { get; set; }
         public DbSet<AlexaSession> AlexaSessions { get; set; }
         public DbSet<DevicePermission> Devices { get; set; }
+        public DbSet<Fulfillment> Fulfillments { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -31,6 +32,10 @@ namespace SPECS_Web_Server.Data
             builder.Entity<AlexaSession>()
                 .HasOne(s => s.ApplicationUser)
                 .WithMany(a => a.AlexaSessions);
+
+            builder.Entity<Fulfillment>()
+                .HasOne(u => u.ApplicationUser)
+                .WithMany(f => f.Fulfillments);
         }
     }
 }

@@ -60,8 +60,7 @@ namespace SPECS_Web_Server
                 {
                     ClientId = "alexa",
                     ClientName = "Alexa Client",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
-
+                    AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
                     RequireConsent = false,
 
                     ClientSecrets = 
@@ -76,9 +75,11 @@ namespace SPECS_Web_Server
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
                         "api1"
                     },
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true,
+                    AllowAccessTokensViaBrowser = true
                 }
             };
         }
