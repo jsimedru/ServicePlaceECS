@@ -31,14 +31,14 @@ namespace SPECS_Web_Server.Controllers
 
         //POST api/alexarequest
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]SkillRequest body)
+        public IActionResult Post([FromBody]SkillRequest body)
         {
             AlexaSkillRequest request = new AlexaSkillRequest(_context, _userManager, body);
             SkillResponse response = request.ProcessRequest(body);
             //Return built response from alexa/alexaSkills
             //FIX
             return new OkObjectResult(response);
-            
+
         }
 
         [HttpGet]
