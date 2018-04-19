@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Identity;
 namespace SPECS_Web_Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class MedicalController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,12 +28,28 @@ namespace SPECS_Web_Server.Controllers
 
         //POST api/alexarequest
         [HttpPost]
-        public IActionResult Post([FromBody]MedicalSensorData body)
+        public async Task<IActionResult> Post([FromBody]MedicalSensorData body)
         {
+            user = _context.Users.Include(ApplicationUser => ApplicationUser.MedicalSensorData)
+                .Single(u => u.Email == body.UserEmail);
+            if(user != null)
+            {
+                user.MedicalSensorData.Add(new MedicalSensorData()
+                {
+                    UserEmail = body.UserEmail,
+                    ECG = body.ECG,
+                    SpO2 = body.SpO2,
+                    Respiration = body.Respiration,
+                    Pulse = body.Pulse,
+                    BloodPressure = body.BloodPressure,
+                    health = body.health
+
+                });
+                await _context.SaveChangesAsync();
+            }
             //Get User
             //Save MedicalSensorData entry to user
             return Ok();
-
         }
     }
     

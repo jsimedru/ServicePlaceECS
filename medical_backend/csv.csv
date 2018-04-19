@@ -1,0 +1,5 @@
+User,ID,Blood_Pressure,ECG,Pulse,SpO2 
+Alex,1,110/70,0.1,60,.9
+Ben,3,130/90,0.1,70,.8
+Dennis,2,120/80,0.5,80,.7
+Yuvi,4,100/80,0.5,100,.6

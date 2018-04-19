@@ -92,6 +92,34 @@ namespace SPECS_Web_Server.Controllers
                         newSession.Fulfillment.Category = FulfillmentCategory.Safety;
                         break;
 
+                    case "displayMedicalSummaryIntent":
+                        var medicalResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+                        MedicalSensorData medicalData = user.MedicalSensorData;
+                        string healthString="";
+                        if(medicalData != null){
+                            try {
+                                if(medicalData.healthy==true)
+                                {
+                                    healthString = "You are healthy!"
+                                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                                }
+                                else
+                                {
+                                    healthString="You aren't healthy."
+                                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                                }
+
+                            } catch (Exception e){
+                                healthString = "error"
+                                medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                            }
+                        response = ResponseBuilder.Tell(medicalResponse);
+                        //var finalResponse = ResponseBuilder.TellWithCard(medicalResponse, "Health Summary", healthString);
+                        //return finalResponse;
+                        //Generate Alexa request
+                        newSession.FulfillmentStatus = "Fulfilled";
+                        break;
+
                     default:
                         var defaultResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         defaultResponse.Ssml = "<speak>An error occured, please try again.</speak>";
@@ -128,7 +156,6 @@ namespace SPECS_Web_Server.Controllers
                             to: new PhoneNumber(family.Members.ElementAt(i).PhoneNumber.ToString()),
                             from: new PhoneNumber("+16147675740"),
                             body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + user.FirstName + " " + user.LastName + " has triggered an alert. Please get in contact.");
-
                         Console.WriteLine(message.Sid);
 
                     } catch (Exception e){
@@ -138,5 +165,6 @@ namespace SPECS_Web_Server.Controllers
                 }
             }
         }
+        
     }
 }
