@@ -1,11 +1,28 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"]</h2>
+@using SPECS_Web_Server.Views.Manage
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    body { background-image: url("http://www.serviceplace.org/images/dsc_0212.jpg?crc=212741601"); }
+        
+    </style>
+</head>
 
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a nunc vitae tellus hendrerit porttitor. 
-    Nam eget lacus sit amet mi sagittis viverra in sit amet neque. Quisque eu ornare magna. Ut a ante ut lacus feugiat tincidunt. 
-    Nulla eu purus congue, rutrum metus non, elementum turpis. Aenean semper magna vitae metus aliquam ornare id id libero. 
-    Aenean condimentum, orci euismod ullamcorper sagittis, eros est imperdiet tortor, vel porttitor libero odio non massa. 
-    Duis dignissim lobortis nisi, a bibendum dui mattis nec. Praesent elementum placerat luctus. Integer tortor sapien, volutpat at semper non, convallis eget ligula. 
-    Praesent commodo luctus nunc et varius. Donec semper ut leo id tempus.</p>
+<body>
+    <h2>@ViewData["Title"]</h2>
+
+
+
+</body>
+</html>
+
+
+
+

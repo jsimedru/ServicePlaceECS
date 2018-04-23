@@ -2,24 +2,49 @@
     ViewData["Title"] = "Home Page";
 }
 
-<center>
-    <img src="~/images/serviceplacelogo.png" alt="ASP.NET" class="img-responsive" width="500" height="600" />
-    <hr />
-    <p class="h">Innovaction at your service</p>
-    <img class ="h" src="~/images/elderly.jpeg" alt="ASP.NET" class="img-responsive" width="900" height="400" />
-</center>
 
-<div class="row">
-    <div class="col-md-6">
-        <h2>About Us</h2>
-        <ul>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a nunc vitae tellus hendrerit porttitor. Nam eget lacus sit amet mi sagittis viverra in sit amet neque. Quisque eu ornare magna. Ut a ante ut lacus feugiat tincidunt. Nulla eu purus congue, rutrum metus non, elementum turpis. Aenean semper magna vitae metus aliquam ornare id id libero. Aenean condimentum, orci euismod ullamcorper sagittis, eros est imperdiet tortor, vel porttitor libero odio non massa. Duis dignissim lobortis nisi, a bibendum dui mattis nec. Praesent elementum placerat luctus. Integer tortor sapien, volutpat at semper non, convallis eget ligula. Praesent commodo luctus nunc et varius. Donec semper ut leo id tempus.
-        </ul>
+
+@{
+    ViewData["Title"] = "About";
+}
+@using SPECS_Web_Server.Views.Manage
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    body { background-image: url("https://images5.alphacoders.com/553/553858.jpeg"); }
+    </style>
+</head>
+
+<body>
+    <center>
+        <img src="~/images/serviceplacelogo.png" alt="ASP.NET" class="img-responsive" width="500" height="600" />
+        <hr />
+        <p class="h">Innovation at your service</p>
+    </center>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>What We Do</h2>
+            <ul>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a nunc vitae tellus hendrerit porttitor. Nam eget lacus sit amet mi sagittis viverra in sit amet neque. Quisque eu ornare magna. Ut a ante ut lacus feugiat tincidunt. Nulla eu purus congue, rutrum metus non, elementum turpis. Aenean semper magna vitae metus aliquam ornare id id libero. Aenean condimentum, orci euismod ullamcorper sagittis, eros est imperdiet tortor, vel porttitor libero odio non massa. Duis dignissim lobortis nisi, a bibendum dui mattis nec. Praesent elementum placerat luctus. Integer tortor sapien, volutpat at semper non, convallis eget ligula. Praesent commodo luctus nunc et varius. Donec semper ut leo id tempus.
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h2>Join Today!</h2>
+            <ul>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a nunc vitae tellus hendrerit porttitor. Nam eget lacus sit amet mi sagittis viverra in sit amet neque. Quisque eu ornare magna. Ut a ante ut lacus feugiat tincidunt. Nulla eu purus congue, rutrum metus non, elementum turpis. Aenean semper magna vitae metus aliquam ornare id id libero. Aenean condimentum, orci euismod ullamcorper sagittis, eros est imperdiet tortor, vel porttitor libero odio non massa. Duis dignissim lobortis nisi, a bibendum dui mattis nec. Praesent elementum placerat luctus. Integer tortor sapien, volutpat at semper non, convallis eget ligula. Praesent commodo luctus nunc et varius. Donec semper ut leo id tempus.
+            </ul>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h2>Join Today!</h2>
-        <ul>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a nunc vitae tellus hendrerit porttitor. Nam eget lacus sit amet mi sagittis viverra in sit amet neque. Quisque eu ornare magna. Ut a ante ut lacus feugiat tincidunt. Nulla eu purus congue, rutrum metus non, elementum turpis. Aenean semper magna vitae metus aliquam ornare id id libero. Aenean condimentum, orci euismod ullamcorper sagittis, eros est imperdiet tortor, vel porttitor libero odio non massa. Duis dignissim lobortis nisi, a bibendum dui mattis nec. Praesent elementum placerat luctus. Integer tortor sapien, volutpat at semper non, convallis eget ligula. Praesent commodo luctus nunc et varius. Donec semper ut leo id tempus.
-        </ul>
-    </div>
-</div>
+
+</body>
+</html>
+
+
+
+
