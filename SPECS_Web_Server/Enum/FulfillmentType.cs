@@ -9,9 +9,9 @@ namespace SPECS_Web_Server.Models
 {
     public enum FulfillmentType
     {
-        Informational,
-        Service,
-        Emergency,
-        Social
+        Critical,
+        High,
+        Medium,
+        Low
     }
 }

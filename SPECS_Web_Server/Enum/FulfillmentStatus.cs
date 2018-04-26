@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Alexa.NET;
 using Alexa.NET.Helpers;
 using Alexa.NET.Request;
@@ -9,9 +10,13 @@ namespace SPECS_Web_Server.Models
 {
     public enum FulfillmentStatus
     {
-        Initiated,
+        [Display(Name = "Unfulfilled")]
+        Unfulfilled,
+
+        [Display(Name = "In-Progress")]
         InProgress,
-        Fulfilled,
-        Unfulfilled
+
+        [Display(Name = "Fulfilled")]
+        Fulfilled
     }
 }

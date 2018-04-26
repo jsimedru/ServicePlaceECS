@@ -191,6 +191,8 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("EmergencyContact");
+
                     b.Property<int?>("FamilyID");
 
                     b.Property<string>("FirstName");
@@ -304,6 +306,8 @@ namespace SPECS_Web_Server.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ApplicationUserId");
+
+                    b.Property<string>("ApplicationUserKey");
 
                     b.Property<int>("Category");
 

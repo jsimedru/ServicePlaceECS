@@ -15,9 +15,13 @@ namespace SPECS_Web_Server.Views.Admin
 
         public static string Fulfillments => "Fulfillments";
 
+        public static string ChangeFulfillmentNote => "ChangeFulfillmentNote";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string FulfillmentsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Fulfillments);
+
+        public static string ChangeFulfillmentNoteNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangeFulfillmentNote);
 
         public static string PageNavClass(ViewContext viewContext, string page)
         {

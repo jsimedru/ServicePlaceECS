@@ -235,9 +235,11 @@ namespace SPECS_Web_Server.Migrations
                     ID = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ApplicationUserId = table.Column<string>(nullable: true),
+                    ApplicationUserKey = table.Column<string>(nullable: true),
                     Category = table.Column<int>(nullable: false),
                     DeviceID = table.Column<string>(nullable: true),
                     Note = table.Column<string>(nullable: true),
+                    Source = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Timestamp = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false)
@@ -263,8 +265,10 @@ namespace SPECS_Web_Server.Migrations
                     BloodPressure = table.Column<string>(nullable: true),
                     ECG = table.Column<float>(nullable: false),
                     Pulse = table.Column<int>(nullable: false),
+                    Respiration = table.Column<float>(nullable: false),
                     SpO2 = table.Column<float>(nullable: false),
-                    healthy = table.Column<bool>(nullable: false)
+                    UserEmail = table.Column<string>(nullable: true),
+                    health = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {

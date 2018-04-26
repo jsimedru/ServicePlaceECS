@@ -3,7 +3,43 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        ul.v {
+            list-style-type: none;
+            margin: 5px;
+            padding: 5px;
+            width: 250px;
+        }
 
+        li a {
+            display: block;
+            padding: 30px 25px;
+            text-decoration: dashed;
+            font-weight: bold;
+            text-align: center;
+            color: #FF9900;
+            font-size: 150%;
+        }
+        li { /*changes box borders*/
+            border-radius: 25px;
+            text-align: center;
+        }
+
+            /* Change the link color on hover */
+            li a:hover {
+                background-color: #008CBA;
+                color: white;
+                border-bottom: 1px;
+                border-radius: 25px;
+            }
+        .active {
+            background-color: #FFD800;
+        }
+    </style>
+</head>
 <ul class="nav nav-pills nav-stacked">
     <li class="@AdminNavPages.IndexNavClass(ViewContext)"><a asp-action="Index">All Users</a></li>
     <li class="@AdminNavPages.FulfillmentsNavClass(ViewContext)"><a asp-action="Fulfillments">All Fulfillments</a></li>

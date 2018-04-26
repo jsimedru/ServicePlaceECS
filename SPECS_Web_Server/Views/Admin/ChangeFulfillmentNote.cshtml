@@ -1,0 +1,39 @@
+@model AdminChangeFulfillmentNoteViewModel
+@{
+    ViewData["Title"] = "Change Fulfillment Note";
+    ViewData.AddActivePage(AdminNavPages.Fulfillments);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: #ffff99;
+        }
+    </style>
+</head>
+<h4>@ViewData["Title"]</h4>
+<body>
+    <p>Current Note: </p>
+    <p>@Model.CurrentNote</p>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <form method="post" asp-action="ChangeFulfillmentNote" class="form-group">
+                        <input asp-for="@Model.FulfillmentID" type="hidden" />
+                        <label asp-for="Note"></label>
+                        <input asp-for="Note" class="form-control" value ="@Model.CurrentNote" />
+                        <button type="submit" class="btn btn-default">Update Note</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

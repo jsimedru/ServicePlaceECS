@@ -32,6 +32,9 @@ namespace SPECS_Web_Server.Models.ManageViewModels
         [Display(Name = "Address 2 (If Applicable)")]
         public string Address2 { get; set; }
 
+        [Display(Name = "Emergency Contact Number")]
+        public string EmergencyContact { get; set; }
+
         [Display(Name = "Medical Conditions")]
         public string MedicalConditions { get; set; }
 

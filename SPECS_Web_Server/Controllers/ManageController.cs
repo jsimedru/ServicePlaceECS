@@ -72,6 +72,7 @@ namespace SPECS_Web_Server.Controllers
                 LastName = user.LastName,
                 Address1 = user.Address1,
                 Address2 = user.Address2,
+                EmergencyContact = user.EmergencyContact,
                 MedicalConditions = user.MedicalConditions,
                 PreferredDoctor = user.PreferredDoctor,
                 StatusMessage = StatusMessage
@@ -118,6 +119,7 @@ namespace SPECS_Web_Server.Controllers
             user.Address1 = model.Address1;
             user.Address2 = model.Address2;
             user.MedicalConditions = model.MedicalConditions;
+            user.EmergencyContact = model.EmergencyContact;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.PreferredDoctor = model.PreferredDoctor;

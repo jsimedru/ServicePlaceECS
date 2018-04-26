@@ -36,6 +36,11 @@ namespace SPECS_Web_Server.Data
             builder.Entity<Fulfillment>()
                 .HasOne(u => u.ApplicationUser)
                 .WithMany(f => f.Fulfillments);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(f => f.Fulfillments)
+                .WithOne(u => u.ApplicationUser);
+                
         }
     }
 }

@@ -37,6 +37,8 @@ namespace SPECS_Web_Server.Models
 
         public String PreferredDoctor { get; set; }
 
+        public String EmergencyContact { get; set; }
+
         public ApplicationUser(){
             Fulfillments = new List<Fulfillment>();
             AlexaSessions = new List<AlexaSession>();
