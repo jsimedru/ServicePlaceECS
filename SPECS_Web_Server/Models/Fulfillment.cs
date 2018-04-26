@@ -11,6 +11,8 @@ namespace SPECS_Web_Server.Models
     {
         public int ID { get; set; }
 
+        public string ApplicationUserKey { get; set; }
+        
         public ApplicationUser ApplicationUser { get; set; }
 
         public FulfillmentType Type { get; set; }
@@ -28,5 +30,6 @@ namespace SPECS_Web_Server.Models
         public FulfillmentStatus Status { get; set; }
 
         public string Note { get; set; }
+
     }
 }

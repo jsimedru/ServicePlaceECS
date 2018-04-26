@@ -25,7 +25,7 @@
         <tbody>
             <tr>
                 <th>Request Source</th>
-                <th>Request Type</th>
+                <th>Urgency</th>
                 <th>Request Category</th>
                 <th>Timestamp</th>
                 <th>Status</th>
@@ -38,7 +38,23 @@
                     <td>@session.Type</td>
                     <td>@session.Category</td>
                     <td>@session.Timestamp</td>
-                    <td>@session.Status</td>
+                    <td>
+                        @switch(@session.Status)
+                                {
+                                    case FulfillmentStatus.Unfulfilled: 
+                                        <strong style="color:red;">@session.Status</strong>
+                                        break;
+                                    case FulfillmentStatus.InProgress:
+                                        <strong style="color:blue;">@session.Status</strong>
+                                        break;
+                                    case FulfillmentStatus.Fulfilled:
+                                        <strong style="color:green;">@session.Status</strong>
+                                        break;
+                                    default:
+                                        <strong>@session.Status</strong>
+                                        break;
+                                }
+                    </td>
                     <td>@session.Note</td>
                 </tr>
             }

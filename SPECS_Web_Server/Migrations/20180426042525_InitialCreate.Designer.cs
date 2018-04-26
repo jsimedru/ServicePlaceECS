@@ -12,8 +12,8 @@ using System;
 namespace SPECS_Web_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180419002827_add_field_to_fulfillments")]
-    partial class add_field_to_fulfillments
+    [Migration("20180426042525_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -306,6 +306,8 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<string>("ApplicationUserId");
 
+                    b.Property<string>("ApplicationUserKey");
+
                     b.Property<int>("Category");
 
                     b.Property<string>("DeviceID");
@@ -340,9 +342,13 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<int>("Pulse");
 
+                    b.Property<float>("Respiration");
+
                     b.Property<float>("SpO2");
 
-                    b.Property<bool>("healthy");
+                    b.Property<string>("UserEmail");
+
+                    b.Property<bool>("health");
 
                     b.HasKey("ID");
 

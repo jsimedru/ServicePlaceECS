@@ -58,21 +58,19 @@ namespace SPECS_Web_Server.Controllers
             
             user = _context.Users.Include(ApplicationUser => ApplicationUser.AlexaSessions)
                     .Include(ApplicationUser => ApplicationUser.MedicalSensorData)
+                    .Include(ApplicationUser => ApplicationUser.Fulfillments)
                     .Single(u => u.Id == queryuser.Id);
 
             if (user != null)
             {
                 //Generate fulfillment record
                 Fulfillment fulfillment = new Fulfillment(){
-                    ApplicationUser = user,
                     DeviceID = _skillRequest.Context.System.Device.DeviceID,
                     Timestamp = _skillRequest.Request.Timestamp,
-                    Source = FulfillmentSource.Alexa,
-                    Type = FulfillmentType.Informational,
-
+                    Source = FulfillmentSource.Alexa
                 };
 
-                //Store Alexa Intent History
+                //Generate Alexa Intent History
                 AlexaSession newSession = new AlexaSession(){
                     ApplicationUser = user,
                     Type = _skillRequest.Request.Type,
@@ -88,53 +86,21 @@ namespace SPECS_Web_Server.Controllers
 
                 switch (intentRequest.Intent.Name){
                     case "sendalert":
-                        safetyAlert(user);
-                        //Generate Alexa request
-                        var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
-                        safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
-                        response = ResponseBuilder.Tell(safetyResponse);
-                        newSession.Fulfillment.Status = FulfillmentStatus.Fulfilled;
-                        newSession.Fulfillment.Category = FulfillmentCategory.Safety;
-                        break;
+                        return safetyIntent(user, fulfillment, newSession);
 
                     case "displayMedicalSummaryIntent":
-                        var medicalResponse = new Alexa.NET.Response.SsmlOutputSpeech();
-                        MedicalSensorData medicalData = user.MedicalSensorData.Last();
-                        string healthString="";
-                        if(medicalData != null){
-                            if(medicalData.health==true)
-                            {
-                                healthString = "You are healthy!";
-                                medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
-                            }
-                            else
-                            {
-                                healthString="You aren't healthy.";
-                                medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
-                            }
+                        return medicalDataIntent(user, fulfillment, newSession);
 
-                            response = ResponseBuilder.Tell(medicalResponse);
-                            //var finalResponse = ResponseBuilder.TellWithCard(medicalResponse, "Health Summary", healthString);
-                            //return finalResponse;
-                            //Generate Alexa request
-                            newSession.Fulfillment.Status = FulfillmentStatus.Fulfilled;
-                        }
-                        break;
+                    case "requestRide":
+                        return requestRideIntent(intentRequest.Intent.Slots, user, fulfillment, newSession);
 
                     default:
                         var defaultResponse = new Alexa.NET.Response.SsmlOutputSpeech();
                         defaultResponse.Ssml = "<speak>An error occured, please try again.</speak>";
                         response = ResponseBuilder.Tell(defaultResponse);
                         newSession.Fulfillment.Status = FulfillmentStatus.Unfulfilled;
-                        break;
+                        return response;
                 }
-
-                _context.Update(user);
-                user.AlexaSessions.Add(newSession);
-                user.Fulfillments.Add(fulfillment);
-                //_userManager.UpdateAsync(result);
-               
-                _context.SaveChanges();
             }
             else
             {
@@ -145,28 +111,93 @@ namespace SPECS_Web_Server.Controllers
 
         }
 
+        private SkillResponse requestRideIntent(Dictionary<string, Alexa.NET.Request.Slot> slots, ApplicationUser user, Fulfillment fulfillment, AlexaSession session)
+        {
+            Slot daySlot = slots["day"];
+            Slot timeSlot = slots["time"];
+            fulfillment.Note = "Ride requested. " + daySlot.Value + " " + timeSlot.Value;
+            fulfillment.Type = FulfillmentType.Medium;
+            fulfillment.Category = FulfillmentCategory.Community;
+            fulfillment.Status = FulfillmentStatus.Unfulfilled;
+
+            user.AlexaSessions.Add(session);
+            user.Fulfillments.Add(fulfillment);
+            _context.SaveChanges();
+
+            //Generate Alexa request
+            var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+            safetyResponse.Ssml = "<speak>I have entered a fulfillment request for a ride. You should receive a confirmation in the next 24 hours for your ride" 
+                + " on " + daySlot.Value + " " + timeSlot.Value + "</speak>";
+            return ResponseBuilder.Tell(safetyResponse);
+        }
+
+        private SkillResponse safetyIntent(ApplicationUser user, Fulfillment fulfillment, AlexaSession session){
+            sendsafetyAlert(user);
+            //Update skill-specific fulfillment info
+            fulfillment.Note = "Alert sent to Emergency Contact";
+            fulfillment.Type = FulfillmentType.High;
+            fulfillment.Category = FulfillmentCategory.Safety;
+            fulfillment.Status = FulfillmentStatus.Fulfilled;
+
+            user.AlexaSessions.Add(session);
+            user.Fulfillments.Add(fulfillment);
+            _context.SaveChanges();
+
+            //Generate Alexa request
+            var safetyResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+            safetyResponse.Ssml = "<speak>I have sent an alert to your emergency contact.</speak>";
+            return ResponseBuilder.Tell(safetyResponse);
+        }
+
+        private SkillResponse medicalDataIntent(ApplicationUser user, Fulfillment fulfillment, AlexaSession session){
+            //Update skill-specific fulfillment info
+            fulfillment.Note = "User requested Medical Data Update";
+            fulfillment.Category = FulfillmentCategory.Safety;
+            fulfillment.Status = FulfillmentStatus.Fulfilled;
+
+            user.AlexaSessions.Add(session);
+            user.Fulfillments.Add(fulfillment);
+            _context.SaveChanges();
+
+            var medicalResponse = new Alexa.NET.Response.SsmlOutputSpeech();
+            MedicalSensorData medicalData = user.MedicalSensorData.Last();
+            string healthString="";
+            if(medicalData != null){
+                if(medicalData.health==true)
+                {
+                    healthString = "You are healthy!";
+                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                }
+                else
+                {
+                    healthString="You aren't healthy.";
+                    medicalResponse.Ssml = "<speak>"+healthString+"</speak>";
+                }
+
+                return ResponseBuilder.Tell(medicalResponse);                            
+            } else {
+                medicalResponse.Ssml = "<speak>"+ "An error occured, please try again." + "</speak>"; 
+            }
+            return ResponseBuilder.Tell(medicalResponse);
+        }
+
+
+
         //TODO: Further develop Emergency Contact system & propery retrieve emergency contacts and contact first one on the list.
-        private async void safetyAlert(ApplicationUser appuser){
+        private async void sendsafetyAlert(ApplicationUser appuser){
             TwilioClient.Init(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+                try {
+                    //Send Message through Twilio API
+                    var message = await MessageResource.CreateAsync(
+                        to: new PhoneNumber(appuser.EmergencyContact),
+                        from: new PhoneNumber("+16147675740"),
+                        body: "Hello, " + appuser.FirstName + " " + appuser.LastName + " has triggered an alert. Please get in contact.");
+                    Console.WriteLine(message.Sid);
 
-            Family family = appuser.Family;
-            if(family != null){
-                for(int i = 0; i < family.Members.Count; i++){
-                    try {
-                        //Send Message through Twilio API
-                        var message = await MessageResource.CreateAsync(
-                            to: new PhoneNumber(family.Members.ElementAt(i).PhoneNumber.ToString()),
-                            from: new PhoneNumber("+16147675740"),
-                            body: "Hello, " + family.Members.ElementAt(i).FirstName + ". " + appuser.FirstName + " " + appuser.LastName + " has triggered an alert. Please get in contact.");
-                        Console.WriteLine(message.Sid);
-
-                    } catch (Exception e){
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(e);
-                    }
+                } catch (Exception e){
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e);
                 }
             }
-        }
-        
     }
 }

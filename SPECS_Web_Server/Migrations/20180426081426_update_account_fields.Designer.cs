@@ -12,8 +12,8 @@ using System;
 namespace SPECS_Web_Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180415214231_UpdateRelationships")]
-    partial class UpdateRelationships
+    [Migration("20180426081426_update_account_fields")]
+    partial class update_account_fields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -192,6 +192,8 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("EmergencyContact");
+
                     b.Property<int?>("FamilyID");
 
                     b.Property<string>("FirstName");
@@ -306,11 +308,15 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<string>("ApplicationUserId");
 
+                    b.Property<string>("ApplicationUserKey");
+
                     b.Property<int>("Category");
 
                     b.Property<string>("DeviceID");
 
                     b.Property<string>("Note");
+
+                    b.Property<int>("Source");
 
                     b.Property<int>("Status");
 
@@ -338,9 +344,13 @@ namespace SPECS_Web_Server.Migrations
 
                     b.Property<int>("Pulse");
 
+                    b.Property<float>("Respiration");
+
                     b.Property<float>("SpO2");
 
-                    b.Property<bool>("healthy");
+                    b.Property<string>("UserEmail");
+
+                    b.Property<bool>("health");
 
                     b.HasKey("ID");
 

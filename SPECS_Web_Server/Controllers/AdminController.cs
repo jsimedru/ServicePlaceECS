@@ -81,5 +81,54 @@ namespace SPECS_Web_Server.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangeFulfillmentNote(int FulfillmentID)
+        {
+            
+            Fulfillment fulfillment = await _context.Fulfillments.Include(u => u.ApplicationUser).SingleAsync(f => f.ID == FulfillmentID);
+            if(fulfillment == null)
+            {
+                 throw new ApplicationException($"AAAAAAAAAAAHHHHHHHHHHHHHH!");
+            }
+
+            var model = new AdminChangeFulfillmentNoteViewModel
+            {
+                FulfillmentID = FulfillmentID,
+                CurrentNote = fulfillment.Note
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeFulfillmentNote(AdminChangeFulfillmentNoteViewModel model)
+        {
+            Fulfillment fulfillment = await _context.Fulfillments.Include(u => u.ApplicationUser).SingleAsync(f => f.ID == model.FulfillmentID);
+            if(fulfillment == null)
+            {
+                 throw new ApplicationException($"AAAAAAAAAAAHHHHHHHHHHHHHH!");
+            }
+
+            fulfillment.Note = model.Note;
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Fulfillments));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AdvanceFulfillment(int FulfillmentID)
+        {
+            Fulfillment fulfillment = await _context.Fulfillments.Include(u => u.ApplicationUser).SingleAsync(f => f.ID == FulfillmentID);
+            if(fulfillment == null)
+            {
+                 throw new ApplicationException($"AAAAAAAAAAAHHHHHHHHHHHHHH!");
+            }
+            
+            if( fulfillment.Status < FulfillmentStatus.Fulfilled) fulfillment.Status++;
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Fulfillments));
+        }
+
     }
 }

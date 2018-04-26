@@ -14,7 +14,7 @@
                         <th>Requester </th>
                         <th>Notes</th>
                         <th>Request Source</th>
-                        <th>Request Type</th>
+                        <th>Urgency</th>
                         <th>Request Category</th>
                         <th>Timestamp</th>
                         <th>Status</th>
@@ -32,8 +32,34 @@
                             <td>@fulfillment.Type</td>
                             <td>@fulfillment.Category</td>
                             <td>@fulfillment.Timestamp</td>
-                            <td>@fulfillment.Status</td>
-                            <td><button class="btn" type="submit">Add Note</button></td>
+                            <td>
+                                @switch(@fulfillment.Status)
+                                {
+                                    case FulfillmentStatus.Unfulfilled: 
+                                        <strong style="color:red;">@fulfillment.Status</strong>
+                                        break;
+                                    case FulfillmentStatus.InProgress:
+                                        <strong style="color:blue;">@fulfillment.Status</strong>
+                                        break;
+                                    case FulfillmentStatus.Fulfilled:
+                                        <strong style="color:green;">@fulfillment.Status</strong>
+                                        break;
+                                    default:
+                                        <strong>@fulfillment.Status</strong>
+                                        break;
+                                }
+                            </td>
+
+                            <td>
+                                <form asp-action="ChangeFulfillmentNote" method="get" class="form-group">
+                                    <input asp-for="@fulfillment.ID" name="FulfillmentID" type="hidden" />
+                                    <button class="btn" type="submit">Update Note</button>
+                                </form>
+                                <form asp-action="AdvanceFulfillment" method="post" class="form-group">
+                                    <input asp-for="@fulfillment.ID" name="FulfillmentID" type="hidden" />
+                                    <button class="btn" type="submit">Advance Status</button>
+                                </form>        
+                            </td>
                         </tr>
                     }
                 </tbody>
