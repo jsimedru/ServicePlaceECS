@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import sys, getopt
 import csv
@@ -6,13 +6,13 @@ import json
 import pandas as pd
 import numpy as np
 from pprint import pprint
-import requests
+import requests as req
 
 #Entity Framework for OAuth
 #important import: curl -OL https://github.com/requests/requests/tarball/master
 #Get Command Line Arguments
 #format on CLI: python csv-json.py -i users.csv -o users.json -f dump
-url='http://mlangston.xyz/api/medicaliotcontroller'
+url='http://mlangston.xyz/api/MedicalController'
 def main(argv):
     #don't forget to change path in CLI, but these are default paths
     sample1 = '/Users/RachelDedinsky/Desktop/senior/capstone 1/project/SPElderCare/medical_backend/log.csv'
@@ -97,8 +97,8 @@ def main(argv):
     read_csv(input_file, output_file, format)
     data = json.load(open(output_file))
     pprint(data)
-    headers = {'Content-type': 'multipart/form-data'}
-    r = requests.post(url, data=data, headers=headers)
+    headers = {'Content-type': 'multipart/json'}
+    resp = req.post(url, json=data, headers=headers)
 	#print (r.text)
 
 #Read CSV File
@@ -121,5 +121,3 @@ def write_json(data, json_file, format):
 
 if __name__ == "__main__":
    main(sys.argv[1:])
-
-
