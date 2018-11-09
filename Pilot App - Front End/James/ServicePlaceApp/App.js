@@ -1,7 +1,7 @@
-
 import React, { Component } from "react";
 import { View, Text, FlatList, Alert, TouchableOpacity, StyleSheet, Button } from "react-native";
 import { List, ListItem } from "react-native-elements";
+import { createStackNavigator } from 'react-navigation';
 
 {/*'''''''''Here are the sample data structures''''''''''*/}
 ElderList =[
@@ -121,23 +121,20 @@ renderEldersButton()
 {
     //render button code
 }
-
 renderRequestsButton()
 {
 
 }
 renderEmployeesButton()
 {
-
 }
 renderCareHomesButton()
 {
-
 }
 renderAccountSettingsButton()
 {
-
 }
+
 function RenderHomeScreen()
 {
     if (UserType == "Chief Admin")
@@ -158,13 +155,11 @@ function RenderHomeScreen()
         renderEldersButton()
         renderRequestsButton()
     }
-
     renderAccountSettingsButton()
-
 }
 */}
 
-function RenderLists(item)
+function RenderLists(item, navigation)
 {
     if (WhatToRender == "Elder")
     {
@@ -173,6 +168,7 @@ function RenderLists(item)
                 avatar={{uri: item.avatar_url}}
                 title={`Name: ${item.FirstName} ${item.LastName}`}
                 subtitle={`Age: ${item.Age} | Care Home: ${item.CareHome}`}
+                button onPress={() => navigation.navigate('Details',{ObjectType:'Elder',item:item})}
             />
         );
     }
@@ -182,6 +178,7 @@ function RenderLists(item)
             <ListItem
                 title={`Name: ${item.FirstName} ${item.LastName}`}
                 subtitle={`Job Title: ${item.Position}  Care Home: ${item.CareHome}`}
+                button onPress={() => navigation.navigate('Details',{ObjectType:'Employee',item:item})}
             />
         );
     }
@@ -191,10 +188,58 @@ function RenderLists(item)
             <ListItem
                 title={`Care Home Name: ${item.Name}`}
                 subtitle={`Address: ${item.Address}`}
+                button onPress={() => navigation.navigate('Details',{ObjectType:'CareHome',item:item})}
             />
         );
     }
 }
+
+function RenderDetails(ObjectType, item)
+{
+    if (ObjectType == "Elder")
+    {
+        return (
+            <View>
+                <Text>FirstName: {item.FirstName}</Text>
+                <Text>LastName: {item.LastName}</Text>
+                <Text>ObjectType: {ObjectType}</Text>
+                <Text>Age: {item.Age}</Text>
+                <Text>Birthday: {item.Birthday}</Text>
+                <Text>CareHome: {item.CareHome}</Text>
+                <Text>EmployeeID: {item.EmployeeID}</Text>
+            </View>
+        );
+    }
+    else if (ObjectType == "Employee")
+    {
+        return (
+            <View styles={{}}>
+                <Text>FirstName: {item.FirstName}</Text>
+                <Text>LastName: {item.LastName}</Text>
+                <Text>ObjectType: {ObjectType}</Text>
+                <Text>Age: {item.Age}</Text>
+                <Text>Birthday: {item.Birthday}</Text>
+                <Text>CareHome: {item.CareHome}</Text>
+                <Text>Position: {item.Position}</Text>
+                <Text>EmployeeID: {item.EmployeeID}</Text>
+            </View>
+        );
+    }
+    else if (ObjectType == "CareHome")
+    {
+        return (
+            <View>
+                <Text>Name: {item.Name}</Text>
+                <Text>Address: {item.Address}</Text>
+                <Text>ObjectType: {ObjectType}</Text>
+                <Text>CareHomeID: {item.CareHomeID}</Text>
+            </View>
+        );
+    }
+
+
+}
+
 
 function SetWhatToRender(ButtonSelected)
 {
@@ -250,12 +295,24 @@ class ListViewRender extends Component {
         <FlatList
           data = {WhichListToRender()}
           renderItem = {({ item }) => (
-            RenderLists(item)
+                RenderLists(item,this.props.navigation)
           )}
         />
       </List>
     );
   }
+}
+
+class DetailViewRender extends Component {
+
+    render()
+    {
+        const ObjectType = this.props.navigation.getParam('ObjectType');
+        const item = this.props.navigation.getParam('item');
+        return(
+            RenderDetails(ObjectType, item)
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -273,4 +330,20 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ListViewRender;
+export default createStackNavigator(
+  {
+    List:
+    {
+        screen: ListViewRender,
+        navigationOptions: () => ({header: null})
+    },
+    Details:
+    {
+        screen: DetailViewRender,
+        navigationOptions: () => ({header: null})
+    }
+  },
+  {
+    initialRouteName: 'List',
+  }
+);
