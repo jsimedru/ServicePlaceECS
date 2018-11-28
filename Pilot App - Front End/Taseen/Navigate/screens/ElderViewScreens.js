@@ -11,8 +11,8 @@ class FlatListItem extends React.Component {
   render(){
     return(
       <View style={styles.blue}>
-      <Text style={styles.blueS}>Name:{this.props.itemPass.name}</Text>
-      <Text style={styles.blueS}>Preferred Food: {this.props.itemPass.food}</Text>
+      <Text style={styles.blue}>Name:{this.props.itemPass.name}</Text>
+      <Text style={styles.blue}>Preferred Food: {this.props.itemPass.food}</Text>
       </View>
     );
   }
@@ -40,15 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'gray',
    },
-   blue:
-   {
-     fontSize: 34,
-   },
-   blueS:
-   {
-     fontSize: 34,
-   }
-
+   blue:{ fontSize: 34,},
 });
 
 

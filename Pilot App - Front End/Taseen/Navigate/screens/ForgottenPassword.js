@@ -6,9 +6,10 @@ class ForgottenPassword extends React.Component{
     constructor(){
         super();
         this.state = {email: ''}
-       }
-       authenticate = ()=>{
-        if(this.state.email == 'admin@gmail.com'){ Alert.alert('Logging In..') }else{ Alert.alert('Incorrect Password or Email')} 
+    }
+    
+    authenticate = ()=>{
+        if(this.state.email == 'admin@gmail.com'){ Alert.alert('Sent Request..') }else{ Alert.alert('Incorrect Password or Email')} 
       }
     render(){
         return(

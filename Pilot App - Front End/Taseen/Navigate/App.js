@@ -7,18 +7,22 @@ import ElderViewScreen from './screens/ElderViewScreens'
 import RegistrationScreen from './screens/RegistrationScreen'
 import ForgotPasswordScreen from './screens/ForgottenPassword'
 import MultiTypeScreen from './screens/MultiTypeScreen'
+import RequestScreen from './screens/RequestScreen'
 export default class App extends React.Component {
   render(){ return( <AppNavigator/> ); }
 }
 
 const AppNavigator = createStackNavigator({
+
   Login: LoginScreen,
-  ElderHomeS: ElderHomeScreen,
   ElderListS: ElderViewScreen, 
   Registration: RegistrationScreen,
   ForgotPass: ForgotPasswordScreen,
-  MTScreen: MultiTypeScreen
-  }, // Sets Navigation Header to be hidden.
+  MTScreen: MultiTypeScreen,
+  Requests: RequestScreen,
+  ElderHomeS: ElderHomeScreen, 
+  }, 
+  // Sets Navigation Header to be hidden.
   { navigationOptions: { header: null}} 
 )
 

@@ -17,12 +17,10 @@ class MultiTypeScreen extends React.Component{
     render(){
         return(
         <View style={styles.container}>
-                <TouchableOpacity style={styles.touchBtn} onPress={this.authenticate}><Text>Type 1</Text></TouchableOpacity>              
-                <TouchableOpacity style={styles.touchBtn} onPress={this.authenticate}><Text>TYPE 2</Text></TouchableOpacity> 
+                <TouchableOpacity style={styles.touchBtn} onPress={this.authenticate}><Text>Chief Admin - Token 1</Text></TouchableOpacity>              
+                <TouchableOpacity style={styles.touchBtn} onPress={this.authenticate}><Text>Family Membder - Type 2</Text></TouchableOpacity> 
 
         </View>
-
-
         );
     }
 }

@@ -1,9 +1,8 @@
 import React from 'react';
 import {StyleSheet, Alert, Text, View,TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native';
+
 // Hides The Keyboard From anywhere on the screen
-const DismissKeyboard = ({children}) => (
-  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
-)
+const DismissKeyboard = ({children}) => ( <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>)
 CareHomeList = [
   {
     Name: "Taseen",
@@ -29,69 +28,68 @@ CareHomeList = [
     MultiTokens: "yes",
     token1: "Employee",
     token2: "FamilyMember"
-  }
-
-]
- class LoginScreen extends React.Component {
-   constructor(){
-    super();
-    this.state = {name: '', password: ''}
+  }]
+  
+  class LoginScreen extends React.Component {
+    constructor(){
+      super();
+      this.state = {name: '', password: ''}
    }
-   // Find a way to fetch values from server. Fetch from server. Fetch token If(elder) -> elderScreen
-   // if(care home manager) -> carehomeManager ..... etc...
+
+/* FETCH_SERVER 
+- fetch('url') -> See: https://facebook.github.io/react-native/docs/network
+
+if(this.state.name == found && this.state.password == found){
+    Get UserName.TokenArray -> parse Token Array
+    if {multiple tokens, send to MTScreen with parameters.}else {go to Token Screen}
+}*/
+
   authenticate = ()=>{
      if(this.state.name == 'admin' && this.state.password == '123' && CareHomeList[2].MultiTokens == 'no'){
-        // Alert.alert('Logging In..')
-        this.props.navigation.navigate("ElderHomeS")
-     }
+        this.props.navigation.navigate("ElderHomeS")}
      else if(this.state.name == 'admins' && this.state.password == '123' && CareHomeList[3].MultiTokens == 'yes'){
-        this.props.navigation.navigate("MTScreen")
-     }
-     else{ 
-       Alert.alert('Incorrect Password or Email')
-     } 
+        this.props.navigation.navigate("MTScreen")}
+     else{ Alert.alert('Incorrect Password or Email')} 
    }
-  render() {
-    return (
-    <DismissKeyboard>     
+// FIX SOME STYLINGS. Some child containers can have similar stlyings. Can be transferred to parent containers. i.e. alignItems
+  render(){
+    return(
+    <DismissKeyboard>
       <View style={styles.container}>
+{/* Top */}
         <View style={styles.top}>
           <Text style={styles.welcome}>Welcome to ServicePlace Login!</Text>
-          <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("ElderHomeS")}>
-            <Text>Temporary Elder Home</Text>
-          </TouchableOpacity> 
+{/* <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("ElderHomeS")}> <Text>Temporary Elder Home</Text></TouchableOpacity>  */}
         </View>
+{/* Bottom Half */}
         <View style={styles.bottom}>
-          
           <View style={styles.inputFields}> 
-            <TextInput style={styles.textFields} placeholder='Email Address' keyboardType='email-address'
-            onChangeText={(typedTxt)=>{ this.setState({name: typedTxt});}} 
-            // value= {this.state.name}
-           />
-            <TextInput style={styles.textFields} placeholder='Password' secureTextEntry
-            onChangeText={(typedTxt)=>{ this.setState({password: typedTxt});}} 
-            // value={this.state.password}
-            />
+          {/* Email TextField */}
+            <TextInput 
+              style={styles.textFields} placeholder='Email Address' keyboardType='email-address'
+              onChangeText={(typedTxt)=>{ this.setState({name: typedTxt});}} onSubmitEditing={() => this.passwordInput.focus()}
+             />
+          {/* Password TextField */}
+            <TextInput 
+              style={styles.textFields} placeholder='Password' secureTextEntry
+              onChangeText={(typedTxt)=>{ this.setState({password: typedTxt});}} ref={(input)=>this.passwordInput = input}
+              onSubmitEditing={this.authenticate}
+             />
           </View>
-          <TouchableOpacity style={[styles.touchBtn,{width:'50%'}]} onPress={this.authenticate}>
-          {/* ()=> this.props.navigation.navigate("#") */}
-          <Text>Login</Text></TouchableOpacity> 
-
+          
+          <TouchableOpacity style={[styles.touchBtn,{width:'50%'}]} onPress={this.authenticate}><Text>Login</Text></TouchableOpacity> 
           <View style={styles.forgotRegister}>
-            <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("Registration") }>
-              <Text>Register</Text></TouchableOpacity> 
-            <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("ForgotPass") }>
-            <Text>Forgot Password?</Text></TouchableOpacity>  
+            <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("Registration")}><Text>Register</Text></TouchableOpacity> 
+            <TouchableOpacity style={styles.touchBtn} onPress={()=> this.props.navigation.navigate("ForgotPass")  }><Text>Forgot Password?</Text></TouchableOpacity>  
           </View> 
-
-          </View>    
-      </View>
+        </View>  
+        {/* End Container */}  
+      </View>  
     </DismissKeyboard>
-    );}
+    );
+  }
 }
-
 export default LoginScreen;
-
 const styles = StyleSheet.create({
   touchBtn:{
     backgroundColor: '#DDDDDD',
@@ -109,6 +107,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  bottom:{ flex: 1, alignItems: 'center', // backgroundColor:'#f39c12',
+},
   forgotRegister:{
   // backgroundColor: 'red',
     flexDirection: 'row',
@@ -117,10 +117,7 @@ const styles = StyleSheet.create({
     paddingTop: 35,
 
    },
-  bottom:{ flex: 1, alignItems: 'center', // backgroundColor:'#f39c12',
-  },
   inputFields:{ width: '85%'},
-  
   textFields:{
     backgroundColor:'rgba(255,255,255,0.7)',
     height: 40,

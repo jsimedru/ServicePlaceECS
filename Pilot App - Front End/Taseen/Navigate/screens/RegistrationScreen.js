@@ -6,8 +6,9 @@ import { Text, View, StyleSheet } from 'react-native';
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{ textAlign:'center'}}>To register, please email:To register, please email:To register, please email:</Text>
-      </View>
+        <Text style={{ textAlign:'center'}}>To register, please email:</Text>
+        
+      </View> 
     );
   }
 }
