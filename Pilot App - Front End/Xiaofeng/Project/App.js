@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import { Alert, AppRegistry, Button, Platform, StyleSheet, Text, TouchableHighlight, TouchableOpacity, TouchableNativeFeedback, TouchableWithoutFeedback, View } from 'react-native';
 import { createStackNavigator,createAppContainer, StackActions, NavigationActions  } from 'react-navigation';
 
-function renderEldersButton(){
+function renderEldersButton()
+{
 return (
       <ListItem
 
-       <Button onPress={this._onPressButton}
-       //onPress={() => this.props.navigation.navigate('List')
-         title="Elder"
-
+        <Button/>
+        //onPress={this._onPressButton}
+        //onPress={() => this.props.navigation.navigate('List')
+        title="Elder"
         />
+      />
                 );
 }
 
