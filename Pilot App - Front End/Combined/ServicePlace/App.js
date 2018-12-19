@@ -19,6 +19,9 @@ import ElderListScreen from './screens/Elder/ElderListScreen'
 import ElderDetailsScreen from './screens/Elder/ElderDetailsScreen'
 import ElderHomeScreen from './screens/Elder/ElderHomeScreen'
 
+import RequestScreen from './screens/RequestScreen'
+
+
 export default class App extends React.Component {
   render(){ return( <AppNavigator/> ); }
 }
@@ -40,7 +43,11 @@ const AppNavigator = createStackNavigator(
 
     ElderHomeS: ElderHomeScreen,
     ElderListS: ElderListScreen,
-    ElderDetailS: ElderDetailsScreen
+    ElderDetailS: ElderDetailsScreen,
+
+    Requests: RequestScreen,
+
+    
   }, 
   { // Sets Navigation Header to be hidden.
     navigationOptions: { header: null}
